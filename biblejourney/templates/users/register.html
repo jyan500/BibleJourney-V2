@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 	<div class = "content-section">
-		<form method = "POST" action = "{{ url_for('users.register') }}">
+		<form method = "GET" action = "{{ url_for('users.register') }}">
 			<!-- csrf token -->
 			{{ form.hidden_tag() }}	
 			<fieldset class = "form-group">
