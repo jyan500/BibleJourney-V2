@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint
+from flask import render_template, request, Blueprint, flash
 from biblejourney.main.forms import VersesForm 
 import json
 import requests
@@ -20,7 +20,13 @@ def verses():
 	form = VersesForm(request.args)
 	search_param = form.verse.data
 	json_result = getVerseBodyRequest(search_param)
-	return render_template("main/home.html", form=form, verses=json_result)
+	print(json_result, file = sys.stderr)
+	if (json_result.get('error')):
+		flash("Verses could not be found!", "danger")
+		return render_template("main/home.html", form=form)
+	else:
+		print('here', file = sys.stderr)
+		return render_template("main/home.html", form=form, verses=json_result)
 
 	## version is world english bible by default until different versions are supported
 def getVerseBodyRequest(param: str):

@@ -82,3 +82,25 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+#home-prev-div, #home-next-div {
+	overflow: hidden;
+	min-height: 100%;
+	background-color: white;
+	position: relative;
+}
+
+#home-prev-link, #home-next-link {
+	position: fixed;
+	margin-top: 150px;
+	margin-left: 10px;
+	display: none;
+}
+
+#home-prev-div:hover, #home-next-div:hover {
+	background-color: #EEE;
+}
+
+#home-prev-div:hover #home-prev-link, #home-next-div:hover #home-next-link{
+	display: block;
+}

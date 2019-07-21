@@ -12,7 +12,7 @@
 						{% endfor %}
 					</div>
 				{% else %}
-					{{ form.verse(class="form-control form-control-lg") }}	
+					{{ form.verse(class="form-control form-control-lg", placeholder="Examples: John 3, John 3:16, John 3:17-19 ... ") }}	
 				{% endif %}
 			</div>
 			<div class = "form-group">
@@ -22,9 +22,19 @@
 	</div>
 	{% if verses %}
 		<div class = "content-section">
-			{% for verse in verses.verses %}	
-				<p><sup class = "mr-1">{{ verse.verse }}</sup>{{ verse.text }}</p>	
-			{% endfor %}
+			<div class = "row">
+				<div class = "col-md-1 prev" id = "home-prev-div">
+					<a href = "#" id = "home-prev-link"><i class = "fas fa-chevron-left"></i></a>	
+				</div>
+				<div class = "col-md-10 pl-2">
+					{% for verse in verses.verses %}	
+						<p><sup class = "mr-1">{{ verse.verse }}</sup>{{ verse.text }}</p>	
+					{% endfor %}
+				</div>
+				<div class = "col-md-1 next pr-2 m-0" id = "home-next-div">
+					<a href = "#" id = "home-next-link"><i class = "fas fa-chevron-right"></i></a>	
+				</div>
+			</div>
 		</div>
 	{% endif %}
 {% endblock content %}
