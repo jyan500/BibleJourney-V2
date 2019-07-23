@@ -3,6 +3,7 @@ from biblejourney.main.forms import VersesForm
 import json
 import requests
 import sys
+import re
 main = Blueprint('main', __name__)
 
 @main.route("/")
@@ -19,6 +20,22 @@ def about():
 def verses():
 	form = VersesForm(request.args)
 	search_param = form.verse.data
+	regex = re.compile('^(\\d?\\s?[a-zA-Z]+)(\\s\\d+)([:]?\\d+)?([-]?\\d+)?$')
+	match = regex.match(search_param)
+	is_only_chapter = True 
+	if (match):
+		match_groups = match.groups()
+		print('Match found: ', match.groups(), len(match.groups()), file = sys.stderr)
+		book = match_groups[0]
+		chapter = match_groups[1].strip()
+		start_verse = match_groups[2]
+		end_verse = match_groups[3]
+		if (start_verse or end_verse):
+			is_only_chapter = False 
+	else:	
+		flash("Please search with one of the following formats: John 3, John 3:16, John 3:16-18")
+		return render_template("main/home.html", form=form)
+			
 	json_result = getVerseBodyRequest(search_param)
 	print(json_result, file = sys.stderr)
 	if (json_result.get('error')):
@@ -26,7 +43,7 @@ def verses():
 		return render_template("main/home.html", form=form)
 	else:
 		print('here', file = sys.stderr)
-		return render_template("main/home.html", form=form, verses=json_result)
+		return render_template("main/home.html", form=form, verses=json_result, is_only_chapter = is_only_chapter)
 
 	## version is world english bible by default until different versions are supported
 def getVerseBodyRequest(param: str):

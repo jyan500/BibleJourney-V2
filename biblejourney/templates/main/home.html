@@ -23,17 +23,25 @@
 	{% if verses %}
 		<div class = "content-section">
 			<div class = "row">
+				{% if is_only_chapter %}
 				<div class = "col-md-1 prev" id = "home-prev-div">
 					<a href = "#" id = "home-prev-link"><i class = "fas fa-chevron-left"></i></a>	
 				</div>
-				<div class = "col-md-10 pl-2">
+				{% endif %}
+				{% if is_only_chapter %}
+					<div class = "col-md-10 pl-2">
+				{% else %}
+					<div class = "col-md-12 pl-2">
+				{% endif %}
 					{% for verse in verses.verses %}	
 						<p><sup class = "mr-1">{{ verse.verse }}</sup>{{ verse.text }}</p>	
 					{% endfor %}
-				</div>
+					</div>
+				{% if is_only_chapter %}
 				<div class = "col-md-1 next pr-2 m-0" id = "home-next-div">
 					<a href = "#" id = "home-next-link"><i class = "fas fa-chevron-right"></i></a>	
 				</div>
+				{% endif %}
 			</div>
 		</div>
 	{% endif %}
