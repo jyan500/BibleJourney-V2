@@ -29,6 +29,7 @@ def verses_links(search_param):
 		chapter = match_groups[1]
 		start_verse = match_groups[2]
 		end_verse = match_groups[3]
+		num_chapters = BookRef.query.filter_by(book).first().chapter
 		if (start_verse or end_verse):
 			is_only_chapter = False
 	else:
