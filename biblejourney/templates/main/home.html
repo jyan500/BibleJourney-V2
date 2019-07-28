@@ -25,7 +25,11 @@
 			<div class = "row">
 				{% if is_only_chapter %}
 					<div class = "col-md-1 prev" id = "home-prev-div">
-						<a href = "/verses/{{book}} {{chapter | int - 1}}" id = "home-prev-link"><i class = "fas fa-chevron-left"></i></a>	
+						{% if chapter != 1 %}
+							<a href = "/verses/{{book}} {{chapter - 1}}" id = "home-prev-link"><i class = "fas fa-chevron-left" data-toggle="tooltip" title="{{book}} {{chapter-1}}"></i></a>	
+						{% else %}
+							<a disabled href = "#" class = "disabled" id = "home-prev-link"><i class = "fas fa-chevron-left"></i></a>	
+						{% endif %}
 					</div>
 					<div class = "col-md-10 pl-2">
 						<h2 class = "mb-3">{{ verses.reference }}</h2>
@@ -38,9 +42,13 @@
 					{% endfor %}
 					</div>
 				{% if is_only_chapter %}
-				<div class = "col-md-1 next pr-2 m-0" id = "home-next-div">
-					<a href = "/verses/{{book}} {{chapter | int + 1}}" id = "home-next-link"><i class = "fas fa-chevron-right"></i></a>	
-				</div>
+					<div class = "col-md-1 next pr-2 m-0" id = "home-next-div">
+					{% if chapter != num_chapters %}
+							<a href = "/verses/{{book}} {{chapter + 1}}" id = "home-next-link" data-toggle="tooltip" title="{{book}} {{chapter+1}}"><i class = "fas fa-chevron-right"></i></a>	
+					{% else %}
+						<a disabled href = "#" class = "disabled" id = "home-next-link"><i class = "fas fa-chevron-right"></i></a>
+					{% endif %}
+					</div>
 				{% endif %}
 			</div>
 		</div>

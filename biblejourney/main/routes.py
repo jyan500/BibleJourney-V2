@@ -25,11 +25,9 @@ def verses_links(search_param):
 	match = regex.match(search_param)
 	if (match):
 		match_groups = match.groups()
-		book = match_groups[0]
-		chapter = match_groups[1]
+		chapter = int(match_groups[1].strip())
 		start_verse = match_groups[2]
 		end_verse = match_groups[3]
-		num_chapters = BookRef.query.filter_by(book).first().chapter
 		if (start_verse or end_verse):
 			is_only_chapter = False
 	else:
@@ -40,7 +38,9 @@ def verses_links(search_param):
 		flash("Verses could not be found!", "danger")
 		return render_template("main/home.html", form=form)
 	else:
-		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter)
+		book = json_result['reference'].split(' ')[0]
+		num_chapters = BookRef.query.filter_by(book=book).first().num_chapters
+		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter, num_chapters = num_chapters)
 
 
 @main.route("/verses")
@@ -53,8 +53,7 @@ def verses():
 	if (match):
 		match_groups = match.groups()
 		print('Match found: ', match.groups(), len(match.groups()), file = sys.stderr)
-		book = match_groups[0]
-		chapter = match_groups[1].strip()
+		chapter = int(match_groups[1].strip())
 		start_verse = match_groups[2]
 		end_verse = match_groups[3]
 		if (start_verse or end_verse):
@@ -68,8 +67,13 @@ def verses():
 	if (json_result.get('error')):
 		flash("Verses could not be found!", "danger")
 		return render_template("main/home.html", form=form)
+
 	else:
-		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter)
+		## the reason why the name of the book is retrieved from the API is because the API utilizes a fuzzy-search
+		## algorithm in case the user misspells the book slightly
+		book = json_result['reference'].split(' ')[0]
+		num_chapters = BookRef.query.filter_by(book=book).first().num_chapters
+		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter, num_chapters=num_chapters)
 	## version is world english bible by default until different versions are supported
 def getVerseBodyRequest(param: str):
 	## if start verse and end verse are provided
