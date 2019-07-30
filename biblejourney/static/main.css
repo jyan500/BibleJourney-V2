@@ -104,3 +104,8 @@ a.article-title:hover {
 #home-prev-div:hover #home-prev-link, #home-next-div:hover #home-next-link{
 	display: block;
 }
+
+.verses {
+	max-height: 55vh;
+	overflow-y: auto;
+}
