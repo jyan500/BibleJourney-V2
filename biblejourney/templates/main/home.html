@@ -1,5 +1,21 @@
 {% extends 'layouts/layout.html' %}
 {% block content %}
+	<script>
+		{% if verses %}
+			$(document).ready(function(){
+				$('#home-prev-div').click(function(){
+					window.location.href = '/verses/chapter?search_param={{book}} {{chapter - 1}}';	
+				});
+				$('#home-next-div').click(function(){
+					window.location.href = '/verses/chapter?search_param={{book}} {{chapter + 1}}';	
+				});
+				$('#preference-submit').click(function(){
+					let paragraph_mode = $('#paragraph-mode').prop('checked') ? '1' : '0'
+					window.location.href = '/verses/chapter?search_param={{book}} {{chapter}}&paragraph_mode=' + paragraph_mode;	
+				});
+			});
+		{% endif %}
+	</script>
 	<div class = "content-section">	
 		<form method = "GET" action = "{{ url_for('main.verses') }}">
 			<div class = "form-group">
@@ -21,34 +37,46 @@
 		</form>
 	</div>
 	{% if verses %}
-		<div class = "content-section">
+
+		<div id =  "verse-container" class = "content-section">
 			<div class = "row verses">
 				{% if is_only_chapter %}
-					<div class = "col-md-1 prev" id = "home-prev-div">
 						{% if chapter != 1 %}
-							<a href = "/verses/{{book}} {{chapter - 1}}" id = "home-prev-link"><i class = "fas fa-chevron-left" data-toggle="tooltip" title="{{book}} {{chapter-1}}"></i></a>	
+							<div class = "col-md-1 prev" id = "home-prev-div">
+								<a href = "/verses/chapter?search_param={{book}} {{chapter - 1}}&is_paragraph_mode={{is_paragraph_mode}}" id = "home-prev-link"><i class = "fas fa-chevron-left" data-toggle="tooltip" title="{{book}} {{chapter-1}}"></i></a>	
+							</div>
 						{% else %}
-							<a disabled href = "#" class = "disabled" id = "home-prev-link"><i class = "fas fa-chevron-left"></i></a>	
+							<div class = "col-md-1 prev">
+							</div>
 						{% endif %}
-					</div>
 					<div class = "col-md-10 pl-2">
 						<h2 class = "mb-3">{{ verses.reference }}</h2>
 				{% else %}
 					<div class = "col-md-12 pl-2">
 						<h2 class = "mb-3">{{ verses.reference }}</h2>
 				{% endif %}
-					{% for verse in verses.verses %}	
-						<p><sup class = "mr-1">{{ verse.verse }}</sup>{{ verse.text }}</p>	
-					{% endfor %}
-					</div>
-				{% if is_only_chapter %}
-					<div class = "col-md-1 next pr-2 m-0" id = "home-next-div">
-					{% if chapter != num_chapters %}
-							<a href = "/verses/{{book}} {{chapter + 1}}" id = "home-next-link" data-toggle="tooltip" title="{{book}} {{chapter+1}}"><i class = "fas fa-chevron-right"></i></a>	
+					{% if is_paragraph_mode != '1' %}
+						{% for verse in verses.verses %}	
+							<p><sup class = "mr-1">{{ verse.verse }}</sup>{{ verse.text }}</p>	
+						{% endfor %}
 					{% else %}
-						<a disabled href = "#" class = "disabled" id = "home-next-link"><i class = "fas fa-chevron-right"></i></a>
+						{% for verse in verses.verses %}
+							{% if loop.index % 5 == 0 %}
+								<br/><br/>
+							{% endif %}
+							<span><sup class = "mr-1">{{verse.verse}}</sup>{{verse.text}}</span>
+						{% endfor %}
 					{% endif %}
 					</div>
+				{% if is_only_chapter %}
+					{% if chapter < num_chapters %}
+						<div class = "col-md-1 next pr-2 m-0" id = "home-next-div">
+							<a href = "/verses/chapter?search_param={{book}} {{chapter + 1}}&paragraph_mode={{is_paragraph_mode}}" id = "home-next-link" data-toggle="tooltip" title="{{book}} {{chapter+1}}"><i class = "fas fa-chevron-right"></i></a>	
+						</div>
+					{% else %}
+						<div class = "col-md-1 next">
+						</div>
+					{% endif %}
 				{% endif %}
 			</div>
 		</div>
@@ -56,7 +84,26 @@
 {% endblock content %}
 
 {% block sidebar_content %}
-	<h3>Options</h3>
-	<p class = 'text-muted'> Please choose how you would like the text to be displayed </p>
+	{% if verses %}
+		{% if is_only_chapter %}
+			<h3>Options</h3>
+			<p class = 'text-muted'> Please choose how you would like the text to be displayed </p>
+			{% set search_p = book + chapter|string %}
+			<div class = "form-group">
+				<div class = "form-check">
+					{% if is_paragraph_mode == '1' %}
+						<input id = "paragraph-mode" class = "form-check-input" name = "paragraph_mode" type = "checkbox" value = '1' checked> 
+					{% else %}
+						<input id = "paragraph-mode" class = "form-check-input" name = "paragraph_mode" type = "checkbox" value = '1'> 
+					{% endif %}
+					<label class = "form-check-label" for = "paragraph"> Paragraph Mode </label>
+				</div>
+			</div>
+			<div class = "form-group">
+				<button id = "preference-submit" class = "btn btn-outline-info">Submit</button>	
+			</div>
+		{% endif %}
 	<textarea class = "form-control"></textarea>
+	{% endif %}
 {% endblock sidebar_content %}
+

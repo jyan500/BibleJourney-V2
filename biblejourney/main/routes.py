@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, flash
+from flask import render_template, request, Blueprint, flash, session
 from biblejourney.main.forms import VersesForm 
 from biblejourney.models import BookRef 
 import json
@@ -17,11 +17,14 @@ def home():
 def about():
 	return render_template('main/about.html', title = 'About')
 
-@main.route("/verses/<string:search_param>")
-def verses_links(search_param):
+@main.route("/verses/chapter")
+def chapter():
 	regex = re.compile('^(\\d?\\s?[a-zA-Z]+)(\\s\\d+)([:]?\\d+)?([-]?\\d+)?$')
 	form = VersesForm(request.args)
+	is_paragraph_mode = '0' 
 	is_only_chapter = True
+	search_param = request.args.get('search_param')
+	print('search_param: ', search_param, file = sys.stderr)
 	match = regex.match(search_param)
 	if (match):
 		match_groups = match.groups()
@@ -33,15 +36,26 @@ def verses_links(search_param):
 	else:
 		flash("Please search with one of the following formats: John 3, John 3:16, John 3:16-19", "danger")
 		return render_template("main/home.html", form=form)
+
+ 	## save this preference in session
+	if (request.args.get('paragraph_mode') == '1'):
+		is_paragraph_mode = '1' 
+
 	json_result = getVerseBodyRequest(search_param)
 	if (json_result.get('error')):
 		flash("Verses could not be found!", "danger")
 		return render_template("main/home.html", form=form)
 	else:
 		book = json_result['reference'].split(' ')[0]
-		num_chapters = BookRef.query.filter_by(book=book).first().num_chapters
-		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter, num_chapters = num_chapters)
-
+		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
+		return render_template("main/home.html", 
+			form=form, 
+			verses=json_result, 
+			book = book, 
+			chapter = chapter, 
+			is_only_chapter = is_only_chapter, 
+			num_chapters = num_chapters,
+			is_paragraph_mode = is_paragraph_mode)
 
 @main.route("/verses")
 def verses():
@@ -59,7 +73,7 @@ def verses():
 		if (start_verse or end_verse):
 			is_only_chapter = False 
 	else:	
-		flash("Please search with one of the following formats: John 3, John 3:16, John 3:16-18")
+		flash("Please search with one of the following formats: John 3, John 3:16, John 3:16-18", "danger")
 		return render_template("main/home.html", form=form)
 			
 	json_result = getVerseBodyRequest(search_param)
@@ -72,7 +86,7 @@ def verses():
 		## the reason why the name of the book is retrieved from the API is because the API utilizes a fuzzy-search
 		## algorithm in case the user misspells the book slightly
 		book = json_result['reference'].split(' ')[0]
-		num_chapters = BookRef.query.filter_by(book=book).first().num_chapters
+		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
 		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter, num_chapters=num_chapters)
 	## version is world english bible by default until different versions are supported
 def getVerseBodyRequest(param: str):

@@ -29,5 +29,4 @@ def create_app(config_class=Config):
 
 	import biblejourney.models
 
-
 	return app
