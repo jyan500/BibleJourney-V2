@@ -48,6 +48,7 @@ def chapter():
 	else:
 		book = json_result['reference'].split(' ')[0]
 		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
+		form.verse.data = json_result['reference'] 
 		return render_template("main/home.html", 
 			form=form, 
 			verses=json_result, 
