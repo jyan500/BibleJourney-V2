@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, flash, session
+from flask import render_template, request, Blueprint, flash, session, jsonify
 from biblejourney.main.forms import VersesForm 
 from biblejourney.models import BookRef 
 import json
@@ -16,6 +16,18 @@ def home():
 @main.route("/about")
 def about():
 	return render_template('main/about.html', title = 'About')
+
+@main.route("/book")
+def book():
+	book_name = request.args.get('book_name')
+	if (book_name != None):
+		num_chapters = int(BookRef.query.filter_by(book=book_name).first().num_chapters)
+		if (num_chapters != None):
+			return jsonify({'num_chapters' : num_chapters})
+		else:
+			return jsonify({'error' : 'Selected book did not have any chapters!'})
+	else:
+		return jsonify({'error' : 'Selected book was not found!'})
 
 @main.route("/verses/chapter")
 def chapter():
