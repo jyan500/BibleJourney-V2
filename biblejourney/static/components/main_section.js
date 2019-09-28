@@ -7,6 +7,7 @@ class MainSection extends React.Component {
 			verses_list: [],
 			book_name: '',
 			num_chapters: 0,
+			chapter: 0,
 			error: ''
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
@@ -22,7 +23,7 @@ class MainSection extends React.Component {
 			})
 			.then(json => {
 				console.log(json);
-				this.setState({error: '', verses_list : json.verses, book_name : json.verses[0].book_name });
+				this.setState({error: '', verses_list : json.verses, book_name : json.verses[0].book_name, chapter: json.verses[0].chapter});
 				return fetch('http://localhost:5000/book?book_name=' + json.verses[0].book_name);
 			})
 			.then(response => {
@@ -42,7 +43,13 @@ class MainSection extends React.Component {
 			e(React.Fragment, null, 
 				e('div', {'className' : 'col-md-8'},
 					e(SearchBar, {'handleGetRequest': this.handleGetRequest, 'label' : this.props.label}),
-					e(VerseSection, {'error' : this.state.error, 'verses' : this.state.verses_list, 'book' : this.state.book_name, 'num_chapters' : this.state.num_chapters})
+					e(VerseSection, {
+						'error' : this.state.error, 
+						'verses' : this.state.verses_list, 
+						'book' : this.state.book_name, 
+						'num_chapters' : this.state.num_chapters,
+						'chapter' : this.state.chapter
+					})
 				),
 				e('div', {'className' : 'col-md-4'},
 					e(SideBar, {'title' : this.props.sideBarTitle, 'description' : this.props.sideBarDescription, 'label' : this.props.checkBoxLabel})
