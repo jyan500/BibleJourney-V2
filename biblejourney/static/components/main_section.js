@@ -8,9 +8,11 @@ class MainSection extends React.Component {
 			book_name: '',
 			num_chapters: 0,
 			chapter: 0,
-			error: ''
+			error: '',
+			isParagraphMode: false
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
+		this.saveParagraphMode = this.saveParagraphMode.bind(this);
 	}	
 	handleGetRequest(verse){
 		console.log('in handle Get Request: ' + verse);			
@@ -38,6 +40,20 @@ class MainSection extends React.Component {
 			});
 	}
 	// create method to make API call to Bible API
+	renderSearchBar(){
+		let props = {'handleGetRequest' : this.handleGetRequest, 'label': this.props.label}
+
+		if (this.state.book_name != '' && this.state.chapter != 0){
+			props['book'] = this.state.book_name
+			props['chapter'] = this.state.chapter
+		}
+		return e(SearchBar, props)	
+	}
+
+	saveParagraphMode(isParagraphMode){
+		this.setState({isParagraphMode: isParagraphMode});
+	}
+
 	render(){
 		return (
 			e(React.Fragment, null, 
@@ -48,11 +64,18 @@ class MainSection extends React.Component {
 						'verses' : this.state.verses_list, 
 						'book' : this.state.book_name, 
 						'num_chapters' : this.state.num_chapters,
-						'chapter' : this.state.chapter
+						'chapter' : this.state.chapter,
+						'handleGetRequest' : this.handleGetRequest,
+						'isParagraphMode' : this.state.isParagraphMode
 					})
 				),
 				e('div', {'className' : 'col-md-4'},
-					e(SideBar, {'title' : this.props.sideBarTitle, 'description' : this.props.sideBarDescription, 'label' : this.props.checkBoxLabel})
+					e(SideBar, {
+						'title' : this.props.sideBarTitle, 
+						'description' : this.props.sideBarDescription, 
+						'label' : this.props.checkBoxLabel,
+						'saveParagraphMode': this.saveParagraphMode
+					})
 				)
 			)
 		);

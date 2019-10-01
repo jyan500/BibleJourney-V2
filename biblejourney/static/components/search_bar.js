@@ -33,6 +33,13 @@ class SearchBar extends React.Component {
 
 }
 
+SearchBar.propTypes = {
+	label: PropTypes.string,
+	book: PropTypes.string,
+	chapter: PropTypes.number,
+	handleGetRequest: PropTypes.func
+}
+
 // ReactDOM.render(
 // 	e(SearchBar, {label: 'Verse'}, null),
 // 	document.getElementById('search_bar')

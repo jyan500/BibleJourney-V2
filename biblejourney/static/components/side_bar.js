@@ -8,12 +8,11 @@ class SideBar extends React.Component {
 		this.onSubmit = this.onSubmit.bind(this);
 	}
 	onChange(event){
-		const {name, value, type, checked} = event.target
-		if (checked === 'checkbox'){
-			this.setState({[name] : checked})
-		}
-		else{
-			this.setState({[name] : value})	
+		const {name, type, checked} = event.target
+		const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value
+		this.setState({[event.target.name] : value})	
+		if (event.target.type === 'checkbox'){
+			this.props.saveParagraphMode(value);
 		}
 	}
 	onSubmit(event){
@@ -26,7 +25,7 @@ class SideBar extends React.Component {
 				e('p', {'className' : 'text-muted'}, this.props.description),
 				e('div', {'className' : 'form-group'},
 					e('div', {'className' : 'form-check'},
-						e('input', {'onChange' : this.onChange, 'className' : 'form-check-input', 'type' : 'checkbox', 'checked' : this.state.isParagraphMode}),
+						e('input', {'name': 'isParagraphMode', 'onChange' : this.onChange, 'className' : 'form-check-input', 'type' : 'checkbox', 'checked' : this.state.isParagraphMode}),
 						e('label', {'className' : 'form-check-label'}, this.props.label)
 					),
 				),
@@ -41,5 +40,6 @@ class SideBar extends React.Component {
 SideBar.propTypes = {
 	title: PropTypes.string,
 	label: PropTypes.string,
-	description: PropTypes.string
+	description: PropTypes.string,
+	saveParagraphMode: PropTypes.func
 }

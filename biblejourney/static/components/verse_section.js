@@ -1,12 +1,28 @@
 class VerseSection extends React.Component {
 	constructor(){
 		super()
+		this.onClickPrev = this.onClickPrev.bind(this)
+		this.onClickNext = this.onClickNext.bind(this)
 	}	
+	onClickPrev(){
+		let prev_chapter = this.props.chapter - 1
+		if (prev_chapter > 0){
+			let prev_verse = this.props.book + prev_chapter
+			this.props.handleGetRequest(prev_verse)	
+		}
+	}
+	onClickNext(){
+		let next_chapter = this.props.chapter + 1
+		if (next_chapter < this.props.num_chapters){
+			let next_verse = this.props.book + next_chapter
+			this.props.handleGetRequest(next_verse)
+		}
+	}
 	renderPrevious(){
 		if (this.props.book != ""){
 			if (this.props.chapter - 1 > 0){
 				return (
-					e('div', {'className' : 'col-md-1 prev', 'id' : 'home-prev-div'}, 
+					e('div', {'className' : 'col-md-1 prev', 'id' : 'home-prev-div', 'onClick' : this.onClickPrev}, 
 						e('a', {'id' : 'home-prev-link'},
 							e('i', {'className' : 'fas fa-chevron-left'})
 						)
@@ -25,7 +41,7 @@ class VerseSection extends React.Component {
 		if (this.props.book != ""){
 			if (this.props.chapter < this.props.num_chapters){
 				return (
-					e('div', {'className': 'col-md-1 next pr-2 m-0', 'id' : 'home-next-div'},
+					e('div', {'className': 'col-md-1 next pr-2 m-0', 'id' : 'home-next-div', 'onClick' : this.onClickNext},
 						e('a', {'id' : 'home-next-link'},
 							e('i', {'className' : 'fas fa-chevron-right'})
 						)
@@ -45,13 +61,35 @@ class VerseSection extends React.Component {
 			)
 		}	
 	}
-	render(){
-		let verse_elements = this.props.verses.map(function(verse){
-			return e('p', null, 
-						e('sup', {key : verse.verse, 'className' : 'mr-1'}, verse.verse),
+	renderVerseElements(){
+		let verse_elements = [];
+		if (!this.props.isParagraphMode){
+			verse_elements = this.props.verses.map(function(verse){
+				return e('p', null, 
+							e('sup', {key : verse.verse, 'className' : 'mr-1'}, verse.verse),
+							verse.text
+						)	
+			});
+		}	
+		else {
+			this.props.verses.forEach(function(verse, i){
+				console.log(verse);
+				if (i != 0 && i % 5 == 0){
+					verse_elements.push(e('br', null, null))
+					verse_elements.push(e('br', null, null))
+				}
+				verse_elements.push(
+					e('span', null, 
+						e('sup', {key: verse.verse, 'className' : 'mr-1'}, verse.verse),
 						verse.text
-					)	
-		});
+					)
+				)
+			})
+		}
+		return e(React.Fragment, null, verse_elements)
+	}
+	render(){
+		
 		if (this.props.error != ''){
 			return (
 				e('div', {'className' : 'content-section'},
@@ -66,7 +104,7 @@ class VerseSection extends React.Component {
 						e(React.Fragment, null, this.renderPrevious()),
 						e('div', {'className' : 'col-md-10 pl-2'}, 
 							e(React.Fragment, null, this.renderTitle()),
-							e(React.Fragment, null, verse_elements),
+							e(React.Fragment, null, this.renderVerseElements()),
 						),
 						e(React.Fragment, null, this.renderNext())
 					)
@@ -82,5 +120,6 @@ VerseSection.propTypes = {
 	book_name: PropTypes.string,
 	num_chapters: PropTypes.number,
 	chapter: PropTypes.number,
-	error: PropTypes.string
+	error: PropTypes.string,
+	handleGetRequest: PropTypes.func
 }
