@@ -67,6 +67,16 @@ class MainSection extends React.Component {
 					})
 		}
 	}
+	renderSideBar(){
+		if (this.state.book != "" && this.state.chapter != ""){
+			return e(SideBar, {
+						'title' : this.props.sideBarTitle, 
+						'description' : this.props.sideBarDescription, 
+						'label' : this.props.checkBoxLabel,
+						'saveParagraphMode': this.saveParagraphMode
+					})
+		}
+	}
 
 	render(){
 		return (
@@ -76,12 +86,7 @@ class MainSection extends React.Component {
 					this.renderVerseSection()
 				),
 				e('div', {'className' : 'col-md-4'},
-					e(SideBar, {
-						'title' : this.props.sideBarTitle, 
-						'description' : this.props.sideBarDescription, 
-						'label' : this.props.checkBoxLabel,
-						'saveParagraphMode': this.saveParagraphMode
-					})
+					this.renderSideBar()
 				)
 			)
 		);
