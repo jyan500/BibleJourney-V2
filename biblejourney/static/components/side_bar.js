@@ -29,9 +29,6 @@ class SideBar extends React.Component {
 						e('label', {'className' : 'form-check-label'}, this.props.label)
 					),
 				),
-				e('div', {'className' : 'form-group'},
-					e('button' , {'onSubmit' : this.onSubmit, 'className' : 'btn btn-outline-info'}, 'Submit')
-				)
 			)
 		)
 	}

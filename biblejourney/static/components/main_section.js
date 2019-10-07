@@ -54,12 +54,9 @@ class MainSection extends React.Component {
 		this.setState({isParagraphMode: isParagraphMode});
 	}
 
-	render(){
-		return (
-			e(React.Fragment, null, 
-				e('div', {'className' : 'col-md-8'},
-					e(SearchBar, {'handleGetRequest': this.handleGetRequest, 'label' : this.props.label}),
-					e(VerseSection, {
+	renderVerseSection(){
+		if (this.state.book != "" && this.state.chapter != ""){
+			return e(VerseSection, {
 						'error' : this.state.error, 
 						'verses' : this.state.verses_list, 
 						'book' : this.state.book_name, 
@@ -68,6 +65,15 @@ class MainSection extends React.Component {
 						'handleGetRequest' : this.handleGetRequest,
 						'isParagraphMode' : this.state.isParagraphMode
 					})
+		}
+	}
+
+	render(){
+		return (
+			e(React.Fragment, null, 
+				e('div', {'className' : 'col-md-8'},
+					e(SearchBar, {'handleGetRequest': this.handleGetRequest, 'label' : this.props.label}),
+					this.renderVerseSection()
 				),
 				e('div', {'className' : 'col-md-4'},
 					e(SideBar, {
