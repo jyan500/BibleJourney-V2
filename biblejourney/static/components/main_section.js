@@ -78,6 +78,15 @@ class MainSection extends React.Component {
 		}
 	}
 
+	renderNoteSection(){
+		if (this.state.book != "" && this.state.chapter != ""){
+			return e(NoteSection, {
+						'chapter' : this.state.chapter, 
+						'book' : this.state.book_name
+					})
+		}
+	}
+
 	render(){
 		return (
 			e(React.Fragment, null, 
@@ -86,7 +95,8 @@ class MainSection extends React.Component {
 					this.renderVerseSection()
 				),
 				e('div', {'className' : 'col-md-4'},
-					this.renderSideBar()
+					this.renderSideBar(),
+					this.renderNoteSection()
 				)
 			)
 		);
