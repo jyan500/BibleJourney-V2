@@ -1,6 +1,6 @@
 from flask import render_template, request, Blueprint, flash, session, jsonify
 from biblejourney.main.forms import VersesForm 
-from biblejourney.models import BookRef 
+from biblejourney.models import BookRef, Note 
 import json
 import requests
 import sys
@@ -102,6 +102,12 @@ def verses():
 		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
 		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter, num_chapters=num_chapters)
 	## version is world english bible by default until different versions are supported
+
+@main.route("/note/create", methods = ["POST"])
+def create_note():
+	print(request.json, file = sys.stderr)
+	return jsonify({note: 'test'})
+
 def getVerseBodyRequest(param: str):
 	## if start verse and end verse are provided
 	## world english bible api id: 9879dbb7cfe39e4d-01

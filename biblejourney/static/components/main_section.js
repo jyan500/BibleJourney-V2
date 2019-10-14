@@ -39,6 +39,14 @@ class MainSection extends React.Component {
 				this.setState({error: 'Book/Verse was not found!'})
 			});
 	}
+	handleSaveNote(note){
+		console.log('in handle Save Note: ', note);	
+		let url = '/note/create';
+		fetch(url, {method: 'POST', body: JSON.stringify(note), headers: {'Content-Type': 'application/json'}})
+			.then(response => {
+
+			})
+	}
 	// create method to make API call to Bible API
 	renderSearchBar(){
 		let props = {'handleGetRequest' : this.handleGetRequest, 'label': this.props.label}
@@ -82,7 +90,8 @@ class MainSection extends React.Component {
 		if (this.state.book != "" && this.state.chapter != ""){
 			return e(NoteSection, {
 						'chapter' : this.state.chapter, 
-						'book' : this.state.book_name
+						'book' : this.state.book_name,
+						'handleSaveNote' : this.handleSaveNote
 					})
 		}
 	}

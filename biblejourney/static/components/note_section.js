@@ -11,7 +11,7 @@ class NoteSection extends React.Component {
 	}	
 	onSubmit(event){
 		event.preventDefault();
-		console.log(this.state.value);
+		this.props.handleSaveNote(this.state.value);
 	}	
 	onChange(event){
 		this.setState({value: event.target.value});
@@ -26,7 +26,7 @@ class NoteSection extends React.Component {
 				e('form', {'onSubmit' : this.onSubmit}, 
 					e('div', {'className' : 'form-group'},
 						e('label', {'className': 'text-muted form-control-label'}, 'Notes for ' + this.props.book + ' ' + this.props.chapter),
-						e('textarea', {'className' : 'form-control', 'cols' : '30', 'rows' : '5', 'onchange' : this.onChange}),
+						e('textarea', {'name' : 'user-note', 'className' : 'form-control', 'cols' : '30', 'rows' : '5', 'value' : this.state.value, 'onChange' : this.onChange}),
 					),
 					e('div', {'className' : 'form-group'},
 						e('button', {'className' : 'btn btn-outline-info', 'type': 'submit'}, 'Submit')
@@ -40,4 +40,5 @@ class NoteSection extends React.Component {
 NoteSection.propTypes = {
 	book: PropTypes.string,
 	chapter: PropTypes.number,
+	handleSaveNote: PropTypes.func
 }
