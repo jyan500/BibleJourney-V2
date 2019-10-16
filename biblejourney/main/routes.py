@@ -1,6 +1,8 @@
 from flask import render_template, request, Blueprint, flash, session, jsonify
 from biblejourney.main.forms import VersesForm 
 from biblejourney.models import BookRef, Note 
+from biblejourney import db
+from flask_login import current_user, login_required
 import json
 import requests
 import sys
@@ -105,8 +107,14 @@ def verses():
 
 @main.route("/note/create", methods = ["POST"])
 def create_note():
-	print(request.json, file = sys.stderr)
-	return jsonify({note: 'test'})
+	if (current_user.is_authenticated):
+		note = Note(book = request.json.get('book'), chapter = request.json.get('chapter'), content=request.json.get('note'), author=current_user)
+		db.session.add(note)
+		db.session.commit()
+		print("added note", file=sys.stderr)
+		return jsonify({'status': 'success'})
+	else:
+		return jsonify({'status': 'Error: User must be logged in'})
 
 def getVerseBodyRequest(param: str):
 	## if start verse and end verse are provided

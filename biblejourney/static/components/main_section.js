@@ -9,10 +9,11 @@ class MainSection extends React.Component {
 			num_chapters: 0,
 			chapter: 0,
 			error: '',
-			isParagraphMode: false
+			isParagraphMode: false,
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
 		this.saveParagraphMode = this.saveParagraphMode.bind(this);
+		this.handleSaveNote = this.handleSaveNote.bind(this);
 	}	
 	handleGetRequest(verse){
 		console.log('in handle Get Request: ' + verse);			
@@ -42,7 +43,11 @@ class MainSection extends React.Component {
 	handleSaveNote(note){
 		console.log('in handle Save Note: ', note);	
 		let url = '/note/create';
-		fetch(url, {method: 'POST', body: JSON.stringify(note), headers: {'Content-Type': 'application/json'}})
+		fetch(url, {
+			method: 'POST', 
+			body: JSON.stringify({'note': note, 'book' : this.state.book_name, 'chapter' : this.state.chapter}), 
+			headers: {'Content-Type': 'application/json'}
+			})
 			.then(response => {
 
 			})
@@ -89,10 +94,10 @@ class MainSection extends React.Component {
 	renderNoteSection(){
 		if (this.state.book != "" && this.state.chapter != ""){
 			return e(NoteSection, {
-						'chapter' : this.state.chapter, 
-						'book' : this.state.book_name,
-						'handleSaveNote' : this.handleSaveNote
-					})
+					'chapter' : this.state.chapter, 
+					'book' : this.state.book_name,
+					'handleSaveNote' : this.handleSaveNote
+			})
 		}
 	}
 

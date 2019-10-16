@@ -16,6 +16,18 @@ class NoteSection extends React.Component {
 	onChange(event){
 		this.setState({value: event.target.value});
 	}
+	renderSubmit(){
+		if (window.appConfig.is_authenticated){
+			return e('div', {'className' : 'form-group'},
+				e('button', {'className' : 'btn btn-outline-info', 'type': 'submit'}, 'Submit')
+			)	
+		}	
+		else {
+			return e('div', {'className' : 'form-group'},
+				e('small', {'className': 'text-muted'}, 'Please ', e('a', {'href' : '/login'}, 'login'), ' to save your note!')
+			)
+		}
+	}
 	render(){
 		let textbox_style = {
 			'border' : '2px #EEE solid',
@@ -28,9 +40,8 @@ class NoteSection extends React.Component {
 						e('label', {'className': 'text-muted form-control-label'}, 'Notes for ' + this.props.book + ' ' + this.props.chapter),
 						e('textarea', {'name' : 'user-note', 'className' : 'form-control', 'cols' : '30', 'rows' : '5', 'value' : this.state.value, 'onChange' : this.onChange}),
 					),
-					e('div', {'className' : 'form-group'},
-						e('button', {'className' : 'btn btn-outline-info', 'type': 'submit'}, 'Submit')
-					)
+					this.renderSubmit()
+					
 				)
 			)
 		)		

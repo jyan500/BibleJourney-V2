@@ -28,6 +28,16 @@
 	    <script src="https://unpkg.com/prop-types@15.6/prop-types.js"></script>
 
 	    <script src = "{{ url_for('static', filename='main.js') }}"></script>
+	    <script> 
+			// set the value of is_authenticated into the window variable based on server variables
+			window.appConfig = { is_authenticated : 
+				{% if current_user.is_authenticated %} 
+					true 
+				{% else %}
+					false
+				{% endif %} 
+			}
+		</script>
 	</head>	
 	<body>
 		<header class="site-header">
