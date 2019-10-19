@@ -111,6 +111,8 @@ def get_note():
 		existing_note = Note.query.filter_by(book=request.json.get('book'), chapter=request.json.get('chapter')).first()
 		if (existing_note):
 			return jsonify({'status': 'Note found', 'book': existing_note.book, 'chapter': existing_note.chapter, 'content': existing_note.content})
+		else:
+			return jsonify({'status': 'No Note Found', 'content' : ''})
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
 

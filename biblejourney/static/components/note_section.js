@@ -8,12 +8,22 @@ class NoteSection extends React.Component {
 		}
 		this.onSubmit = this.onSubmit.bind(this);
 		this.onChange = this.onChange.bind(this);
+		this.getExistingNote = this.getExistingNote.bind(this);
 	}	
 	componentDidMount(){
+		this.getExistingNote()	
+	}
+	componentDidUpdate(prevProps){
+		if (prevProps.book != this.props.book || prevProps.chapter != this.props.chapter){
+			this.getExistingNote()
+		}
+	}
+	getExistingNote(){
+		this.setState({value: ''})
 		this.props.handleGetNote()
-		.then(response => {
-			this.setState({value: response.content})
-		});		
+		.then(response=>{
+			this.setState({value: response.content})	
+		})	
 	}
 	onSubmit(event){
 		event.preventDefault();
