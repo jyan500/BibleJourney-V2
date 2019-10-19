@@ -14,6 +14,7 @@ class MainSection extends React.Component {
 		this.handleGetRequest = this.handleGetRequest.bind(this);
 		this.saveParagraphMode = this.saveParagraphMode.bind(this);
 		this.handleSaveNote = this.handleSaveNote.bind(this);
+		this.handleGetNote = this.handleGetNote.bind(this);
 	}	
 	handleGetRequest(verse){
 		console.log('in handle Get Request: ' + verse);			
@@ -40,9 +41,20 @@ class MainSection extends React.Component {
 				this.setState({error: 'Book/Verse was not found!'})
 			});
 	}
+	handleGetNote(){
+		let url = '/note/retrieve'	
+		return fetch(url, {
+			method: 'POST',
+			body: JSON.stringify({'book': this.state.book_name, 'chapter': this.state.chapter}),
+			headers: {'Content-Type': 'application/json'}
+
+		}).then(response => {
+			return response.json()	
+		})
+	}
 	handleSaveNote(note){
 		console.log('in handle Save Note: ', note);	
-		let url = '/note/create';
+		let url = '/note/save';
 		fetch(url, {
 			method: 'POST', 
 			body: JSON.stringify({'note': note, 'book' : this.state.book_name, 'chapter' : this.state.chapter}), 
@@ -96,7 +108,8 @@ class MainSection extends React.Component {
 			return e(NoteSection, {
 					'chapter' : this.state.chapter, 
 					'book' : this.state.book_name,
-					'handleSaveNote' : this.handleSaveNote
+					'handleSaveNote' : this.handleSaveNote,
+					'handleGetNote' : this.handleGetNote
 			})
 		}
 	}

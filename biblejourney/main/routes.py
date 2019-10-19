@@ -105,14 +105,30 @@ def verses():
 		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter, num_chapters=num_chapters)
 	## version is world english bible by default until different versions are supported
 
-@main.route("/note/create", methods = ["POST"])
-def create_note():
+@main.route("/note/retrieve", methods = ["POST"])
+def get_note():
 	if (current_user.is_authenticated):
-		note = Note(book = request.json.get('book'), chapter = request.json.get('chapter'), content=request.json.get('note'), author=current_user)
-		db.session.add(note)
-		db.session.commit()
-		print("added note", file=sys.stderr)
-		return jsonify({'status': 'success'})
+		existing_note = Note.query.filter_by(book=request.json.get('book'), chapter=request.json.get('chapter')).first()
+		if (existing_note):
+			return jsonify({'status': 'Note found', 'book': existing_note.book, 'chapter': existing_note.chapter, 'content': existing_note.content})
+	else:
+		return jsonify({'status': 'Error: User must be logged in'})
+
+@main.route("/note/save", methods = ["POST"])
+def save_note():
+	if (current_user.is_authenticated):
+		existing_note = Note.query.filter_by(book=request.json.get('book'), chapter=request.json.get('chapter')).first()
+		if (existing_note):
+			existing_note.content = request.json.get('note')
+			print("updated note", file = sys.stderr)
+			db.session.commit()
+			return jsonify({'status': 'Updated Successfully!'})
+		else:
+			note = Note(book = request.json.get('book'), chapter = request.json.get('chapter'), content=request.json.get('note'), author=current_user)
+			db.session.add(note)
+			db.session.commit()
+			print("added note", file=sys.stderr)
+			return jsonify({'status': 'Saved successfully!'})
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
 

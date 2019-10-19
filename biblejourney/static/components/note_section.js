@@ -9,6 +9,12 @@ class NoteSection extends React.Component {
 		this.onSubmit = this.onSubmit.bind(this);
 		this.onChange = this.onChange.bind(this);
 	}	
+	componentDidMount(){
+		this.props.handleGetNote()
+		.then(response => {
+			this.setState({value: response.content})
+		});		
+	}
 	onSubmit(event){
 		event.preventDefault();
 		this.props.handleSaveNote(this.state.value);
@@ -51,5 +57,6 @@ class NoteSection extends React.Component {
 NoteSection.propTypes = {
 	book: PropTypes.string,
 	chapter: PropTypes.number,
-	handleSaveNote: PropTypes.func
+	handleSaveNote: PropTypes.func,
+	handleGetNote: PropTypes.func
 }
