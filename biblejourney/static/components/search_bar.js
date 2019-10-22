@@ -24,7 +24,7 @@ class SearchBar extends React.Component {
 						e('input', {'onChange' : this.onChange, 'className' : 'form-control form-control-lg', 'placeholder' : 'Examples: John 3, John 3:16, John 3:16-18 ...'})
 					),
 					e('div', {'className' : 'form-group'},
-						e('button', {'type' : 'submit', 'className' : 'btn btn-outline-info'}, 'Submit')
+						e('button', {'type' : 'submit', 'className' : 'btn btn-outline-info'}, 'Search')
 					)
 				)
 			)

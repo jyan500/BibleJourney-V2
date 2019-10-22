@@ -1,16 +1,9 @@
 {% extends 'layouts/layout.html' %}
-{% block react_content %}
-	
-	<div class = "row" id = "main_section"></div>
-	<!-- <div class = "content-section">
+{% block content %}
+	<div class = "content-section">
 		<h2> About Bible Journey </h2>	
 		<div class = "article-content">
 			The goal of BibleJourney is to provide an accessible Bible Study experience.
 		</div>
-	</div> -->
-	<script src = "{{url_for('static', filename = 'components/verse_section.js')}}"></script>
-	<script src = "{{url_for('static', filename = 'components/note_section.js')}}"></script>
-	<script src = "{{url_for('static', filename = 'components/search_bar.js')}}"></script>
-	<script src = "{{url_for('static', filename = 'components/side_bar.js')}}"></script>
-	<script src = "{{url_for('static', filename = 'components/main_section.js')}}"></script>
-{% endblock react_content %}
+	</div>
+{% endblock content %}
