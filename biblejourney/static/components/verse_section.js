@@ -65,7 +65,7 @@ class VerseSection extends React.Component {
 		let verse_elements = [];
 		if (!this.props.isParagraphMode){
 			verse_elements = this.props.verses.map(function(verse){
-				return e('p', null, 
+				return e('p', {key: verse.verse}, 
 							e('sup', {key : verse.verse, 'className' : 'mr-1'}, verse.verse),
 							verse.text
 						)	
