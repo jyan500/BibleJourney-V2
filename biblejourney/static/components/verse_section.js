@@ -13,7 +13,7 @@ class VerseSection extends React.Component {
 	}
 	onClickNext(){
 		let next_chapter = this.props.chapter + 1
-		if (next_chapter < this.props.num_chapters){
+		if (next_chapter <= this.props.num_chapters){
 			let next_verse = this.props.book + next_chapter
 			this.props.handleGetRequest(next_verse)
 		}
