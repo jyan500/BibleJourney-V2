@@ -10,14 +10,18 @@ class MainSection extends React.Component {
 			chapter: 0,
 			error: '',
 			isParagraphMode: false,
+			isSaveNoteSuccess: false,
+			noteMessage: ''
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
 		this.saveParagraphMode = this.saveParagraphMode.bind(this);
+		this.addEditBookMark = this.addEditBookMark.bind(this);
 		this.handleSaveNote = this.handleSaveNote.bind(this);
 		this.handleGetNote = this.handleGetNote.bind(this);
 	}	
 	handleGetRequest(verse){
-		console.log('in handle Get Request: ' + verse);			
+		// reset the existing status messages 
+		this.setState({isSaveNoteSuccess: false, noteMessage: ''});
 
 		const API_URL = 'https://bible-api.com/';
 		let url = API_URL + verse;
@@ -55,13 +59,18 @@ class MainSection extends React.Component {
 	handleSaveNote(note){
 		console.log('in handle Save Note: ', note);	
 		let url = '/note/save';
-		fetch(url, {
+		this.setState({isSaveNoteSuccess: false})
+		return fetch(url, {
 			method: 'POST', 
 			body: JSON.stringify({'note': note, 'book' : this.state.book_name, 'chapter' : this.state.chapter}), 
 			headers: {'Content-Type': 'application/json'}
 			})
 			.then(response => {
-
+				return response.json()
+			}).then(json => {
+				this.setState({isSaveNoteSuccess: true, noteMessage: json.status})	
+			}).catch(e => {
+				this.setState({isSaveNoteSuccess: false, noteMessage: json.status})	
 			})
 	}
 	// create method to make API call to Bible API
@@ -77,6 +86,10 @@ class MainSection extends React.Component {
 
 	saveParagraphMode(isParagraphMode){
 		this.setState({isParagraphMode: isParagraphMode});
+	}
+
+	addEditBookMark(value){
+
 	}
 
 	renderVerseSection(){
@@ -109,7 +122,9 @@ class MainSection extends React.Component {
 					'chapter' : this.state.chapter, 
 					'book' : this.state.book_name,
 					'handleSaveNote' : this.handleSaveNote,
-					'handleGetNote' : this.handleGetNote
+					'handleGetNote' : this.handleGetNote,
+					'isSuccessNoteSave' : this.state.isSaveNoteSuccess,
+					'noteMessage' : this.state.noteMessage
 			})
 		}
 	}

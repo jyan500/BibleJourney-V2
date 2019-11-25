@@ -4,7 +4,7 @@ class NoteSection extends React.Component {
 	constructor(){
 		super()	
 		this.state = {
-			value: ''
+			value: '',
 		}
 		this.onSubmit = this.onSubmit.bind(this);
 		this.onChange = this.onChange.bind(this);
@@ -27,6 +27,7 @@ class NoteSection extends React.Component {
 	}
 	onSubmit(event){
 		event.preventDefault();
+		this.setState({isSuccess: false})
 		this.props.handleSaveNote(this.state.value);
 	}	
 	onChange(event){
@@ -34,14 +35,24 @@ class NoteSection extends React.Component {
 	}
 	renderSubmit(){
 		if (window.appConfig.is_authenticated){
-			return e('div', {'className' : 'form-group'},
+			return e('div', {'className' : 'col-md-4'},
 				e('button', {'className' : 'btn btn-outline-info', 'type': 'submit'}, 'Submit')
 			)	
 		}	
 		else {
-			return e('div', {'className' : 'form-group'},
+			return e('div', {'className' : 'col-md-4'},
 				e('small', {'className': 'text-muted'}, 'Please ', e('a', {'href' : '/login'}, 'login'), ' to save your note!')
 			)
+		}
+	}
+	renderSubmitNote(){
+		if (this.props.noteMessage != ""){
+			if (this.props.isSuccessNoteSave == true){
+				return e('div', {'className': '__custom-alert alert alert-success col-md-7', 'role' : 'alert'}, this.props.noteMessage)	
+			}
+			else {
+				return e('div', {'className': '__custom-alert alert alert-danger col-md-7', 'role' : 'alert'}, this.props.noteMessage)	
+			}
 		}
 	}
 	render(){
@@ -52,7 +63,10 @@ class NoteSection extends React.Component {
 						e('label', {'className': 'text-muted form-control-label'}, 'Notes for ' + this.props.book + ' ' + this.props.chapter),
 						e('textarea', {'name' : 'user-note', 'className' : 'form-control', 'cols' : '30', 'rows' : '13', 'value' : this.state.value, 'onChange' : this.onChange}),
 					),
-					this.renderSubmit()
+					e('div', {'className': 'form-group row'}, 
+						this.renderSubmit(),
+						this.renderSubmitNote()
+					)
 					
 				)
 			)
@@ -64,5 +78,7 @@ NoteSection.propTypes = {
 	book: PropTypes.string,
 	chapter: PropTypes.number,
 	handleSaveNote: PropTypes.func,
-	handleGetNote: PropTypes.func
+	handleGetNote: PropTypes.func,
+	isSuccessNoteSave: PropTypes.bool,
+	noteMessage: PropTypes.string
 }

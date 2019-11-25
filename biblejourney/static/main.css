@@ -107,6 +107,12 @@ a.article-title:hover {
 }
 
 .verses {
-	max-height: 55vh;
+	max-height: 80vh;
 	overflow-y: auto;
+}
+
+/* overwrite bootstrap custom styling for alert when placed next to button*/
+.__custom-alert {
+	padding-top: .45rem;
+	padding-bottom: .45rem;
 }
