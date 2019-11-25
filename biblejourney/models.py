@@ -40,3 +40,14 @@ class BookRef(db.Model):
 
 	def __repr__(self):
 		return f"BookRef('{self.book}', '{self.num_chapters}')"
+
+class Bookmark(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+	book = db.Column(db.String(20))
+	chapter = db.Column(db.String(20))
+	verse =  db.Column(db.String(20))	
+	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+	def __repr__(self):
+		return f"Bookmark('{self.book}', '{self.chapter}', '{self.verse}', '{self.date_posted}')"
