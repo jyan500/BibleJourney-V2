@@ -105,10 +105,10 @@ def verses():
 		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter, num_chapters=num_chapters)
 	## version is world english bible by default until different versions are supported
 
-@main.route("/note/retrieve", methods = ["POST"])
+@main.route("/note/retrieve", methods = ["GET"])
 def get_note():
 	if (current_user.is_authenticated):
-		existing_note = Note.query.filter_by(book=request.json.get('book'), chapter=request.json.get('chapter')).first()
+		existing_note = Note.query.filter_by(book=request.args.get('book'), chapter=request.args.get('chapter')).first()
 		if (existing_note):
 			return jsonify({'status': 'Note found', 'book': existing_note.book, 'chapter': existing_note.chapter, 'content': existing_note.content})
 		else:

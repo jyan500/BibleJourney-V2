@@ -9,20 +9,21 @@ class SideBar extends React.Component {
 		this.onSubmit = this.onSubmit.bind(this);
 	}
 	componentDidMount(){
-		this.getBookmark();
+		//this.getBookmark();
+		this.setState({isBookMarkChecked: this.props.isBookmark})
 	}
 	componentDidUpdate(prevProps){
-		if (prevProps.book != this.props.book || prevProps.chapter != this.props.chapter){
-			this.getBookmark();
+		if (prevProps.isBookmark != this.props.isBookmark){
+			this.setState({isBookMarkChecked: this.props.isBookmark})
 		}
 	}
-	getBookmark(){
-		// this.setState({isBookMarkChecked: false})
-		this.props.handleGetBookmark()
-		.then(response=>{
-			this.setState({isBookMarkChecked: response.is_bookmark})	
-		})		
-	}
+	// getBookmark(){
+	// 	// this.setState({isBookMarkChecked: false})
+	// 	this.props.handleGetBookmark()
+	// 	.then(response=>{
+	// 		this.setState({isBookMarkChecked: response.is_bookmark})	
+	// 	})		
+	// }
 	onChange(event){
 		const {name, type, checked} = event.target
 		const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value

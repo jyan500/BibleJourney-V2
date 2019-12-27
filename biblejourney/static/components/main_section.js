@@ -12,7 +12,9 @@ class MainSection extends React.Component {
 			isParagraphMode: false,
 			isSaveNoteSuccess: false,
 			isBookmark: false,
-			noteMessage: ''
+			note: '',
+			noteMessage: '',
+			loading: false,
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
 		this.saveParagraphMode = this.saveParagraphMode.bind(this);
@@ -20,19 +22,21 @@ class MainSection extends React.Component {
 		this.handleSaveNote = this.handleSaveNote.bind(this);
 		this.handleGetNote = this.handleGetNote.bind(this);
 		this.handleGetBookmark = this.handleGetBookmark.bind(this);
+		this.handleGetVerse = this.handleGetVerse.bind(this);
 	}	
 	handleGetRequest(verse){
 		// reset the existing status messages 
-		this.setState({isSaveNoteSuccess: false, noteMessage: '', isBookmark: false});
-
+		this.setState({isSaveNoteSuccess: false, noteMessage: '', note: '', isBookmark: false});
 		const API_URL = 'https://bible-api.com/';
 		let url = API_URL + verse;
-		fetch(url, {method: 'GET'})
+		var r1, r2, r3;
+		return fetch(url, {method: 'GET'})
 			.then(response => {
 				return response.json();
 			})
 			.then(json => {
 				console.log(json);
+				r1 = json;
 				this.setState({error: '', verses_list : json.verses, book_name : json.verses[0].book_name, chapter: json.verses[0].chapter});
 				return fetch('http://localhost:5000/book?book_name=' + json.verses[0].book_name);
 			})
@@ -40,26 +44,56 @@ class MainSection extends React.Component {
 				return response.json();
 			})
 			.then(json => {
-				console.log(json);	
 				this.setState({num_chapters: json.num_chapters});
-			})
-			.catch(e => {
+				console.log(r1.verses[0].chapter);
+				return this.handleGetNote(r1.verses[0].chapter, r1.verses[0].book_name);
+			}).then(json=>{
+				console.log('Setting note:', json.content);
+				this.setState({note: json.content});
+				return this.handleGetBookmark(r1.verses[0].chapter, r1.verses[0].book_name);
+			}).then(json=>{
+				console.log('Setting bookmark: ' , json.is_bookmark);
+				this.setState({isBookmark: json.is_bookmark});
+			}).catch(e => {
 				this.setState({error: 'Book/Verse was not found!'})
 			});
+		// .catch(e => {
+		// 	this.setState({error: 'Book/Verse was not found!'})
+		// });
+		// const API_URL = 'https://bible-api.com/';
+		// let url = API_URL + verse;
+		// fetch(url, {method: 'GET'})
+		// 	.then(response => {
+		// 		return response.json();
+		// 	})
+		// 	.then(json => {
+		// 		console.log(json);
+		// 		this.setState({error: '', verses_list : json.verses, book_name : json.verses[0].book_name, chapter: json.verses[0].chapter});
+		// 		return fetch('http://localhost:5000/book?book_name=' + json.verses[0].book_name);
+		// 	})
+		// 	.then(response => {
+		// 		return response.json();
+		// 	})
+		// 	.then(json => {
+		// 		console.log(json);	
+		// 		this.setState({num_chapters: json.num_chapters});
+		// 	}).catch(e => {
+		// 		this.setState({error: 'Book/Verse was not found!'})
+		// 	});
 	}
-	handleGetNote(){
-		let url = '/note/retrieve'	
+	handleGetNote(chapter, book){
+		let url = '/note/retrieve?book=' + book + '&chapter=' + chapter;
 		return fetch(url, {
-			method: 'POST',
-			body: JSON.stringify({'book': this.state.book_name, 'chapter': this.state.chapter}),
-			headers: {'Content-Type': 'application/json'}
+			method: 'GET',
+			//body: JSON.stringify({'book': this.state.book_name, 'chapter': this.state.chapter}),
+			//headers: {'Content-Type': 'application/json'}
 
 		}).then(response => {
 			return response.json()	
 		})
 	}
-	handleGetBookmark(){
-		let url = '/bookmark/retrieve'	
+	handleGetBookmark(chapter, book){
+		let url = '/bookmark/retrieve';
 		return fetch(url, {
 			method: 'POST',
 			body: JSON.stringify({'book' : this.state.book_name, 'chapter': this.state.chapter}),
@@ -67,6 +101,9 @@ class MainSection extends React.Component {
 		}).then(response => {
 			return response.json()	
 		})
+		// .then(json => {
+		// 	this.setState({isBookmark : json.is_bookmark})
+		// })
 	}
 	handleSaveNote(note){
 		console.log('in handle Save Note: ', note);	
@@ -152,13 +189,15 @@ class MainSection extends React.Component {
 
 	renderNoteSection(){
 		if (this.state.book != "" && this.state.chapter != ""){
+			console.log('Note right now: ', this.state.note);
 			return e(NoteSection, {
 					'chapter' : this.state.chapter, 
 					'book' : this.state.book_name,
 					'handleSaveNote' : this.handleSaveNote,
 					'handleGetNote' : this.handleGetNote,
 					'isSuccessNoteSave' : this.state.isSaveNoteSuccess,
-					'noteMessage' : this.state.noteMessage
+					'noteMessage' : this.state.noteMessage,
+					'note' : this.state.note,
 			})
 		}
 	}

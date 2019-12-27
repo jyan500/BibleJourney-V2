@@ -10,20 +10,23 @@ class NoteSection extends React.Component {
 		this.onChange = this.onChange.bind(this);
 	}	
 	componentDidMount(){
-		this.getExistingNote()	
+		// this.getExistingNote()	
+		this.setState({value: this.props.note})
 	}
 	componentDidUpdate(prevProps){
-		if (prevProps.book != this.props.book || prevProps.chapter != this.props.chapter){
-			this.getExistingNote()
+		if (prevProps.note != this.props.note){
+			console.log('component did update note section');
+			console.log('value of props: ', this.props)
+			this.setState({value: this.props.note})
 		}
 	}
-	getExistingNote(){
-		this.setState({value: ''})
-		this.props.handleGetNote()
-		.then(response=>{
-			this.setState({value: response.content})	
-		})	
-	}
+	// getExistingNote(){
+	// 	this.setState({value: ''});
+	// 	this.props.handleGetNote()
+	// 	.then(response=>{
+	// 		this.setState({value: response.content})	
+	// 	})	
+	// }
 	onSubmit(event){
 		event.preventDefault();
 		this.setState({isSuccess: false})
@@ -79,5 +82,6 @@ NoteSection.propTypes = {
 	handleSaveNote: PropTypes.func,
 	handleGetNote: PropTypes.func,
 	isSuccessNoteSave: PropTypes.bool,
-	noteMessage: PropTypes.string
+	noteMessage: PropTypes.string,
+	note: PropTypes.string
 }
