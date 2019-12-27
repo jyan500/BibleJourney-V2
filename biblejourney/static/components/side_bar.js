@@ -3,10 +3,25 @@ class SideBar extends React.Component {
 		super()
 		this.state = {
 			isParagraphMode: false, 
-			isBookMark: false
+			isBookMarkChecked: false 
 		}
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+	}
+	componentDidMount(){
+		this.getBookmark();
+	}
+	componentDidUpdate(prevProps){
+		if (prevProps.book != this.props.book || prevProps.chapter != this.props.chapter){
+			this.getBookmark();
+		}
+	}
+	getBookmark(){
+		// this.setState({isBookMarkChecked: false})
+		this.props.handleGetBookmark()
+		.then(response=>{
+			this.setState({isBookMarkChecked: response.is_bookmark})	
+		})		
 	}
 	onChange(event){
 		const {name, type, checked} = event.target
@@ -16,7 +31,7 @@ class SideBar extends React.Component {
 			this.props.saveParagraphMode(value);
 		}
 		else {
-			this.props.addEditBookMark(value);
+			this.props.addOrDeleteBookmark(value);
 		}
 	}
 	onSubmit(event){
@@ -32,7 +47,7 @@ class SideBar extends React.Component {
 						e('label', {'className' : 'form-check-label'}, this.props.label)
 					),
 					e('div', {'className' : 'form-check'},
-						e('input', {'name' : 'isBookMark', 'onChange' : this.onChange, 'className' : 'form-check-input', 'type' : 'checkbox', 'checked': this.state.isBookMark}),
+						e('input', {'name' : 'isBookMarkChecked', 'onChange' : this.onChange, 'className' : 'form-check-input', 'type' : 'checkbox', 'checked': this.state.isBookMarkChecked}),
 						e('label', {'className' : 'form-check-label'}, 'Bookmark this chapter')
 					),
 				),
@@ -43,8 +58,11 @@ class SideBar extends React.Component {
 
 SideBar.propTypes = {
 	title: PropTypes.string,
+	book: PropTypes.string,
+	chapter: PropTypes.number,
 	label: PropTypes.string,
 	description: PropTypes.string,
 	saveParagraphMode: PropTypes.func,
-	addEditBookMark: PropTypes.func
+	addOrDeleteBookMark: PropTypes.func,
+	handleGetBookmark: PropTypes.func
 }

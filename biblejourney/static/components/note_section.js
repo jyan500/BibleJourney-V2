@@ -8,7 +8,6 @@ class NoteSection extends React.Component {
 		}
 		this.onSubmit = this.onSubmit.bind(this);
 		this.onChange = this.onChange.bind(this);
-		this.getExistingNote = this.getExistingNote.bind(this);
 	}	
 	componentDidMount(){
 		this.getExistingNote()	

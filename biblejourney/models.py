@@ -16,6 +16,7 @@ class User(db.Model, UserMixin):
 	## backref = when we have a note, use the author attribute to get the note 
 	## lazy = when at the time this data is loaded, all the posts will also be loaded for the given user
 	notes = db.relationship('Note', backref = 'author', lazy=True)
+	bookmarks = db.relationship('Bookmark', backref = 'author', lazy=True)
 
 	def __repr__(self):
 		return f"User('{self.username}', '{self.email}', '{self.image_file}')"

@@ -1,6 +1,6 @@
 from flask import render_template, request, Blueprint, flash, session, jsonify
 from biblejourney.main.forms import VersesForm 
-from biblejourney.models import BookRef, Note 
+from biblejourney.models import BookRef, Note, Bookmark 
 from biblejourney import db
 from flask_login import current_user, login_required
 import json
@@ -131,6 +131,48 @@ def save_note():
 			db.session.commit()
 			print("added note", file=sys.stderr)
 			return jsonify({'status': 'Saved successfully!'})
+	else:
+		return jsonify({'status': 'Error: User must be logged in'})
+
+@main.route("/bookmark/retrieve", methods = ["POST"])
+def get_bookmark():
+	if (current_user.is_authenticated):
+		existing_bookmark = Bookmark.query.filter_by(book=request.json.get('book'), chapter = request.json.get('chapter'), author = current_user).first()
+		if (existing_bookmark):
+			return jsonify({'status' : 'Bookmark received', 'is_bookmark' : True})
+		else:
+			return jsonify({'status' : 'Bookmark not found', 'is_bookmark' : False})
+	else:
+		return jsonify({'status': 'Error: User must be logged in'})
+
+@main.route("/bookmark/save", methods = ["POST"])
+def save_bookmark():
+	if (current_user.is_authenticated):
+		book = request.json.get('book')
+		chapter = request.json.get('chapter')
+		existing_bookmark = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).first()
+		if (not existing_bookmark):
+			bookmark = Bookmark(book = book, chapter = chapter, author = current_user)
+			db.session.add(bookmark)
+			db.session.commit()
+			return jsonify({'status' : 'Bookmark saved'})
+		else:
+			return jsonify({'status' : 'Error: Bookmark for this chapter already exists!'})
+	else:
+		return jsonify({'status': 'Error: User must be logged in'})
+
+@main.route("/bookmark/delete", methods = ["POST"])
+def delete_bookmark():
+	if (current_user.is_authenticated):
+		book = request.json.get('book')
+		chapter = request.json.get('chapter')
+		existing_bookmark = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).first()
+		if (existing_bookmark):
+			db.session.delete(existing_bookmark)
+			db.session.commit()
+			return jsonify({'status' : 'Bookmark deleted!'})
+		else:
+			return jsonify({'status' : "Error: Bookmark for this chapter doesn't exist!"})
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
 

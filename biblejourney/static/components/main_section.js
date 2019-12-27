@@ -11,17 +11,19 @@ class MainSection extends React.Component {
 			error: '',
 			isParagraphMode: false,
 			isSaveNoteSuccess: false,
+			isBookmark: false,
 			noteMessage: ''
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
 		this.saveParagraphMode = this.saveParagraphMode.bind(this);
-		this.addEditBookMark = this.addEditBookMark.bind(this);
+		this.addOrDeleteBookmark = this.addOrDeleteBookmark.bind(this);
 		this.handleSaveNote = this.handleSaveNote.bind(this);
 		this.handleGetNote = this.handleGetNote.bind(this);
+		this.handleGetBookmark = this.handleGetBookmark.bind(this);
 	}	
 	handleGetRequest(verse){
 		// reset the existing status messages 
-		this.setState({isSaveNoteSuccess: false, noteMessage: ''});
+		this.setState({isSaveNoteSuccess: false, noteMessage: '', isBookmark: false});
 
 		const API_URL = 'https://bible-api.com/';
 		let url = API_URL + verse;
@@ -52,6 +54,16 @@ class MainSection extends React.Component {
 			body: JSON.stringify({'book': this.state.book_name, 'chapter': this.state.chapter}),
 			headers: {'Content-Type': 'application/json'}
 
+		}).then(response => {
+			return response.json()	
+		})
+	}
+	handleGetBookmark(){
+		let url = '/bookmark/retrieve'	
+		return fetch(url, {
+			method: 'POST',
+			body: JSON.stringify({'book' : this.state.book_name, 'chapter': this.state.chapter}),
+			headers: {'Content-Type': 'application/json'}
 		}).then(response => {
 			return response.json()	
 		})
@@ -87,9 +99,26 @@ class MainSection extends React.Component {
 	saveParagraphMode(isParagraphMode){
 		this.setState({isParagraphMode: isParagraphMode});
 	}
+	
+	// add bookmark if it doesn't exist, else delete it if the user unchecks
+	addOrDeleteBookmark(value){
+		let url = this.state.isBookmark ? '/bookmark/delete' : '/bookmark/save';
+		if (url != ''){
+			return fetch(url, {
+				method : 'POST',
+				body: JSON.stringify({'book' : this.state.book_name, 'chapter' : this.state.chapter}),
+				headers: {'Content-Type': 'application/json'}
+			})
+			.then(response => {
+				return response.json();	
+			})
+			.then(json => {
+				console.log(json);
+				this.setState({isBookmark: this.state.isBookmark ? false : true});					
+			}).catch(e => {
 
-	addEditBookMark(value){
-
+			})
+		}
 	}
 
 	renderVerseSection(){
@@ -110,8 +139,13 @@ class MainSection extends React.Component {
 			return e(SideBar, {
 						'title' : this.props.sideBarTitle, 
 						'description' : this.props.sideBarDescription, 
+						'chapter' : this.state.chapter,
+						'book' : this.state.book_name,
 						'label' : this.props.checkBoxLabel,
-						'saveParagraphMode': this.saveParagraphMode
+						'saveParagraphMode': this.saveParagraphMode,
+						'addOrDeleteBookmark': this.addOrDeleteBookmark,
+						'isBookmark' : this.state.isBookmark,
+						'handleGetBookmark': this.handleGetBookmark
 					})
 		}
 	}
