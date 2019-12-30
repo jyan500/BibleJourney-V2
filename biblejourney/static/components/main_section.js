@@ -15,6 +15,9 @@ class MainSection extends React.Component {
 			note: '',
 			noteMessage: '',
 			loading: false,
+			loadingSpinner: false,
+			bookmarks: window.objects.bookmarks,
+			userAuthError: ''
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
 		this.saveParagraphMode = this.saveParagraphMode.bind(this);
@@ -22,7 +25,22 @@ class MainSection extends React.Component {
 		this.handleSaveNote = this.handleSaveNote.bind(this);
 		this.handleGetNote = this.handleGetNote.bind(this);
 		this.handleGetBookmark = this.handleGetBookmark.bind(this);
+		this.handleGetAllBookmarks = this.handleGetAllBookmarks.bind(this);
 	}	
+	componentDidMount(){
+		// this.handleGetAllBookmarks().then(
+		// 	response => {
+		// 		// if user is logged in, retrieve the bookmarks 
+		// 		if (response.status != 1){
+		// 			this.setState({bookmarks: response.bookmarks})
+		// 			console.log(this.state.bookmarks);
+		// 		}
+		// 	},
+		// 	error => {
+		// 		console.log("Error! Could not receive bookmarks");
+		// 	}
+		// );
+	}
 	handleGetRequest(verse){
 		// reset the existing status messages 
 		this.setState({isSaveNoteSuccess: false, noteMessage: '', note: '', isBookmark: false, loading: true});
@@ -108,9 +126,13 @@ class MainSection extends React.Component {
 		}).then(response => {
 			return response.json()	
 		})
-		// .then(json => {
-		// 	this.setState({isBookmark : json.is_bookmark})
-		// })
+	}
+	handleGetAllBookmarks(){
+		let url = '/bookmark/retrieve';	
+		return fetch(url, {
+		}).then(response => {
+			return response.json();	
+		});
 	}
 	handleSaveNote(note){
 		console.log('in handle Save Note: ', note);	
@@ -211,8 +233,20 @@ class MainSection extends React.Component {
 
 	renderLoadingOverlay(){
 		if (this.state.loading){
-			return e(LoadingSpinner);
+			return e(LoadingOverlay);
 		}	
+	}
+
+	renderLoadingSpinner(){
+		if (this.state.loadingSpinner){
+			return e(LoadingSpinner)	
+		}
+	}
+
+	renderBookmarks(){
+		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
+			return e(BookmarkSection, {bookmarks: this.state.bookmarks});
+		}
 	}
 
 	render(){
@@ -220,6 +254,7 @@ class MainSection extends React.Component {
 			e(React.Fragment, null, 
 				e('div', {'className' : 'col-md-8'},
 					this.renderSearchBar(),
+					this.renderBookmarks(),
 					this.renderLoadingOverlay(),
 					this.renderVerseSection()
 				),

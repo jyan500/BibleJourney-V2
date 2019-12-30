@@ -57,7 +57,7 @@ class VerseSection extends React.Component {
 	renderTitle(){
 		if (this.props.book != '' && this.props.chapter != 0){
 			return (
-				e('h2', {'className' : 'mb-3'}, this.props.book + ' ' + this.props.chapter)
+				e('h2', {'className' : 'mt-3 mb-3'}, this.props.book + ' ' + this.props.chapter)
 			)
 		}	
 	}

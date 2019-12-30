@@ -1,5 +1,6 @@
 from flask import render_template, request, Blueprint, flash, session, jsonify
 from biblejourney.main.forms import VersesForm 
+from biblejourney.main.utils import *
 from biblejourney.models import BookRef, Note, Bookmark 
 from biblejourney import db
 from flask_login import current_user, login_required
@@ -13,7 +14,8 @@ main = Blueprint('main', __name__)
 @main.route("/home")
 def home():
 	form = VersesForm()
-	return render_template('main/home.html', form=form) 
+	all_bookmarks = Bookmark.query.filter_by(author = current_user).order_by(Bookmark.date_posted.desc()).all();
+	return render_template('main/home.html', form=form, bookmarks = convert_obj(all_bookmarks)) 
 
 @main.route("/about")
 def about():
@@ -136,14 +138,17 @@ def save_note():
 
 @main.route("/bookmark/retrieve", methods = ["GET"])
 def get_bookmark():
+	existing_bookmark = None
 	if (current_user.is_authenticated):
-		existing_bookmark = Bookmark.query.filter_by(book=request.args.get('book'), chapter = request.args.get('chapter'), author = current_user).first()
+		if (request.args.get('book') and request.args.get('chapter')):
+			existing_bookmark = Bookmark.query.filter_by(book=request.args.get('book'), chapter = request.args.get('chapter'), author = current_user).first()
+
 		if (existing_bookmark):
 			return jsonify({'status' : 'Bookmark received', 'is_bookmark' : True})
 		else:
 			return jsonify({'status' : 'Bookmark not found', 'is_bookmark' : False})
 	else:
-		return jsonify({'status': 'Error: User must be logged in'})
+		return jsonify({'status': 'Error: User must be logged in', 'status' : 1})
 
 @main.route("/bookmark/save", methods = ["POST"])
 def save_bookmark():
