@@ -8,10 +8,10 @@ class SearchBar extends React.Component {
 		this.onSubmit = this.onSubmit.bind(this);
 	}
 	componentDidUpdate(prevProps){
-		if (prevProps.book != this.props.book || prevProps.chapter != this.props.chapter){
-			console.log('updating the search bar with book: ' + this.props.book + ' ' + 'chapter: ' + this.props.chapter)
-			this.setState({verse: this.props.book + ' ' + this.props.chapter});
-		}
+		// if (prevProps.book != this.props.book || prevProps.chapter != this.props.chapter){
+		// 	console.log('updating the search bar with book: ' + this.props.book + ' ' + 'chapter: ' + this.props.chapter)
+		// 	this.setState({verse: this.props.book + ' ' + this.props.chapter});
+		// }
 	}
 	onChange(event){
 		this.setState({verse: event.target.value})	
