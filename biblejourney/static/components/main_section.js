@@ -17,6 +17,7 @@ class MainSection extends React.Component {
 			loading: false,
 			loadingSpinner: false,
 			bookmarks: window.objects.bookmarks,
+			notes: window.objects.notes,
 			userAuthError: ''
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
@@ -25,7 +26,6 @@ class MainSection extends React.Component {
 		this.handleSaveNote = this.handleSaveNote.bind(this);
 		this.handleGetNote = this.handleGetNote.bind(this);
 		this.handleGetBookmark = this.handleGetBookmark.bind(this);
-		this.handleGetAllBookmarks = this.handleGetAllBookmarks.bind(this);
 	}	
 	componentDidMount(){
 		// this.handleGetAllBookmarks().then(
@@ -126,13 +126,6 @@ class MainSection extends React.Component {
 		}).then(response => {
 			return response.json()	
 		})
-	}
-	handleGetAllBookmarks(){
-		let url = '/bookmark/retrieve';	
-		return fetch(url, {
-		}).then(response => {
-			return response.json();	
-		});
 	}
 	handleSaveNote(note){
 		console.log('in handle Save Note: ', note);	
@@ -243,9 +236,15 @@ class MainSection extends React.Component {
 		}
 	}
 
-	renderBookmarks(){
+	renderBookmarkPanel(){
 		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
-			return e(BookmarkSection, {bookmarks: this.state.bookmarks});
+			return e(BookmarkPanel, {bookmarks: this.state.bookmarks});
+		}
+	}
+
+	renderNotePanel(){
+		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
+			return e(NotePanel, {notes: this.state.notes})	
 		}
 	}
 
@@ -254,7 +253,8 @@ class MainSection extends React.Component {
 			e(React.Fragment, null, 
 				e('div', {'className' : 'col-md-8'},
 					this.renderSearchBar(),
-					this.renderBookmarks(),
+					this.renderBookmarkPanel(),
+					this.renderNotePanel(),
 					this.renderLoadingOverlay(),
 					this.renderVerseSection()
 				),

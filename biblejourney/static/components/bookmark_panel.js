@@ -1,4 +1,4 @@
-class BookmarkSection extends React.Component {
+class BookmarkPanel extends React.Component {
 	constructor(){
 		super();
 	}
@@ -6,7 +6,7 @@ class BookmarkSection extends React.Component {
 		let elements = [];
 		this.props.bookmarks.map((obj) => {
 			elements.push(
-				e('li', {key: obj.id}, obj.book + obj.chapter)
+				e('li', {key: obj.id}, obj.book + ' ' + obj.chapter)
 			)
 		})	
 		return e('ul', null, elements);

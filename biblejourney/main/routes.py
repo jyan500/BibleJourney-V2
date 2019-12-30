@@ -15,7 +15,8 @@ main = Blueprint('main', __name__)
 def home():
 	form = VersesForm()
 	all_bookmarks = Bookmark.query.filter_by(author = current_user).order_by(Bookmark.date_posted.desc()).all();
-	return render_template('main/home.html', form=form, bookmarks = convert_obj(all_bookmarks)) 
+	all_notes = Note.query.filter_by(author = current_user).order_by(Note.date_posted.desc()).all();
+	return render_template('main/home.html', form=form, bookmarks = convert_obj(all_bookmarks), notes = convert_obj(all_notes)) 
 
 @main.route("/about")
 def about():

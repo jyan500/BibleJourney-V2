@@ -2,10 +2,16 @@
 {% block react_content %}
 	 <script> 
 		// set the values of some server populated variables to be displayed in the react components (rather than loading via ajax) 
-		window.objects = { bookmarks :  
+		window.objects = { 
+			bookmarks :  
 			{% if current_user.is_authenticated %} 
 				{{ bookmarks | tojson }}
-			{% endif %} 
+			{% endif %},
+			notes: 
+			{% if current_user.is_authenticated %}	
+				{{ notes | tojson }}
+			{% endif %}
+
 		}
 	</script>	
 	<div class = "row" id = "main_section"></div>
@@ -15,6 +21,7 @@
 	<script src = "{{url_for('static', filename = 'components/side_bar.js')}}"></script>
 	<script src = "{{url_for('static', filename = 'components/loading_overlay.js')}}"></script>
 	<script src = "{{url_for('static', filename = 'components/loading_spinner.js')}}"></script>
-	<script src = "{{url_for('static', filename = 'components/bookmarks.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/bookmark_panel.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/note_panel.js')}}"></script>
 	<script src = "{{url_for('static', filename = 'components/main_section.js')}}"></script>
 {% endblock react_content %}
