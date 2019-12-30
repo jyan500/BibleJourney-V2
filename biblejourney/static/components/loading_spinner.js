@@ -3,7 +3,8 @@ class LoadingSpinner extends React.Component {
 		super()
 	}	
 	render(){
-		return e('div', {'className' : 'loader'}, 
+		return e('div', {'className' : 'overlay'}, 
+			e('div', {'className' : 'spinner'})
 		)
 	}
 }

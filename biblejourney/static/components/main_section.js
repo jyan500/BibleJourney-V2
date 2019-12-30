@@ -22,14 +22,13 @@ class MainSection extends React.Component {
 		this.handleSaveNote = this.handleSaveNote.bind(this);
 		this.handleGetNote = this.handleGetNote.bind(this);
 		this.handleGetBookmark = this.handleGetBookmark.bind(this);
-		this.handleGetVerse = this.handleGetVerse.bind(this);
 	}	
 	handleGetRequest(verse){
 		// reset the existing status messages 
-		this.setState({isSaveNoteSuccess: false, noteMessage: '', note: '', isBookmark: false});
+		this.setState({isSaveNoteSuccess: false, noteMessage: '', note: '', isBookmark: false, loading: true});
 		const API_URL = 'https://bible-api.com/';
 		let url = API_URL + verse;
-		var r1, r2, r3;
+		var r1, r2, r3, r4;
 		return fetch(url, {method: 'GET'})
 			.then(response => {
 				return response.json();
@@ -37,23 +36,34 @@ class MainSection extends React.Component {
 			.then(json => {
 				console.log(json);
 				r1 = json;
-				this.setState({error: '', verses_list : json.verses, book_name : json.verses[0].book_name, chapter: json.verses[0].chapter});
+				//this.setState({error: '', verses_list : json.verses, book_name : json.verses[0].book_name, chapter: json.verses[0].chapter});
 				return fetch('http://localhost:5000/book?book_name=' + json.verses[0].book_name);
 			})
 			.then(response => {
 				return response.json();
 			})
 			.then(json => {
-				this.setState({num_chapters: json.num_chapters});
+				r2 = json;
+				//this.setState({num_chapters: json.num_chapters});
 				console.log(r1.verses[0].chapter);
 				return this.handleGetNote(r1.verses[0].chapter, r1.verses[0].book_name);
 			}).then(json=>{
+				r3 = json;
 				console.log('Setting note:', json.content);
-				this.setState({note: json.content});
+				//this.setState({note: json.content});
 				return this.handleGetBookmark(r1.verses[0].chapter, r1.verses[0].book_name);
 			}).then(json=>{
+				r4 = json;
 				console.log('Setting bookmark: ' , json.is_bookmark);
-				this.setState({isBookmark: json.is_bookmark});
+				this.setState({
+						error: '', 
+						verses_list: r1.verses, 
+						book_name: r1.verses[0].book_name, 
+						chapter: r1.verses[0].chapter, 
+						num_chapters: r2.num_chapters, 
+						note: r3.content,
+						isBookmark: r4.is_bookmark,
+						loading: false});
 			}).catch(e => {
 				this.setState({error: 'Book/Verse was not found!'})
 			});
@@ -93,11 +103,8 @@ class MainSection extends React.Component {
 		})
 	}
 	handleGetBookmark(chapter, book){
-		let url = '/bookmark/retrieve';
+		let url = '/bookmark/retrieve?book=' + book + '&chapter=' + chapter;
 		return fetch(url, {
-			method: 'POST',
-			body: JSON.stringify({'book' : this.state.book_name, 'chapter': this.state.chapter}),
-			headers: {'Content-Type': 'application/json'}
 		}).then(response => {
 			return response.json()	
 		})
@@ -124,8 +131,8 @@ class MainSection extends React.Component {
 	}
 	// create method to make API call to Bible API
 	renderSearchBar(){
-		let props = {'handleGetRequest' : this.handleGetRequest, 'label': this.props.label}
-
+		let props = {'handleGetRequest' : this.handleGetRequest, 'label': this.props.label};
+		// console.log('in render search bar: ' + this.state.book_name);
 		if (this.state.book_name != '' && this.state.chapter != 0){
 			props['book'] = this.state.book_name
 			props['chapter'] = this.state.chapter
@@ -176,9 +183,9 @@ class MainSection extends React.Component {
 			return e(SideBar, {
 						'title' : this.props.sideBarTitle, 
 						'description' : this.props.sideBarDescription, 
-						'chapter' : this.state.chapter,
-						'book' : this.state.book_name,
 						'label' : this.props.checkBoxLabel,
+						'book' : this.state.book_name,
+						'chapter' : this.state.chapter,
 						'saveParagraphMode': this.saveParagraphMode,
 						'addOrDeleteBookmark': this.addOrDeleteBookmark,
 						'isBookmark' : this.state.isBookmark,
@@ -202,11 +209,18 @@ class MainSection extends React.Component {
 		}
 	}
 
+	renderLoadingOverlay(){
+		if (this.state.loading){
+			return e(LoadingSpinner);
+		}	
+	}
+
 	render(){
 		return (
 			e(React.Fragment, null, 
 				e('div', {'className' : 'col-md-8'},
-					e(SearchBar, {'handleGetRequest': this.handleGetRequest, 'label' : this.props.label}),
+					this.renderSearchBar(),
+					this.renderLoadingOverlay(),
 					this.renderVerseSection()
 				),
 				e('div', {'className' : 'col-md-4'},

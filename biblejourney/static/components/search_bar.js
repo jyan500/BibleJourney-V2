@@ -2,11 +2,16 @@ class SearchBar extends React.Component {
 	constructor(){
 		super();
 		this.state = {
-			verse: '',
-			isNoteSaveSuccess: false
+			verse: ''	
 		}
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+	}
+	componentDidUpdate(prevProps){
+		if (prevProps.book != this.props.book || prevProps.chapter != this.props.chapter){
+			console.log('updating the search bar with book: ' + this.props.book + ' ' + 'chapter: ' + this.props.chapter)
+			this.setState({verse: this.props.book + ' ' + this.props.chapter});
+		}
 	}
 	onChange(event){
 		this.setState({verse: event.target.value})	
@@ -22,7 +27,7 @@ class SearchBar extends React.Component {
 				e('form', {'onSubmit':this.onSubmit},
 					e('div', {'className' : 'form-group'}, 
 						e('label', {'className' : 'form-control-label'}, this.props.label),
-						e('input', {'onChange' : this.onChange, 'className' : 'form-control form-control-lg', 'placeholder' : 'Examples: John 3, John 3:16, John 3:16-18 ...'})
+						e('input', {'value' : this.state.verse, 'onChange' : this.onChange, 'className' : 'form-control form-control-lg', 'placeholder' : 'Examples: John 3, John 3:16, John 3:16-18 ...'})
 					),
 					e('div', {'className' : 'form-group'},
 						e('button', {'type' : 'submit', 'className' : 'btn btn-outline-info'}, 'Search')

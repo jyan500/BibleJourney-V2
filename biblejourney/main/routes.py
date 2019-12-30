@@ -134,10 +134,10 @@ def save_note():
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
 
-@main.route("/bookmark/retrieve", methods = ["POST"])
+@main.route("/bookmark/retrieve", methods = ["GET"])
 def get_bookmark():
 	if (current_user.is_authenticated):
-		existing_bookmark = Bookmark.query.filter_by(book=request.json.get('book'), chapter = request.json.get('chapter'), author = current_user).first()
+		existing_bookmark = Bookmark.query.filter_by(book=request.args.get('book'), chapter = request.args.get('chapter'), author = current_user).first()
 		if (existing_bookmark):
 			return jsonify({'status' : 'Bookmark received', 'is_bookmark' : True})
 		else:

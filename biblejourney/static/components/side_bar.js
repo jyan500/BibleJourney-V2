@@ -13,7 +13,7 @@ class SideBar extends React.Component {
 		this.setState({isBookMarkChecked: this.props.isBookmark})
 	}
 	componentDidUpdate(prevProps){
-		if (prevProps.isBookmark != this.props.isBookmark){
+		if (prevProps.book != this.props.book || prevProps.chapter != this.props.chapter || prevProps.isBookmark != this.props.isBookmark){
 			this.setState({isBookMarkChecked: this.props.isBookmark})
 		}
 	}

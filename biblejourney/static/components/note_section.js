@@ -14,7 +14,7 @@ class NoteSection extends React.Component {
 		this.setState({value: this.props.note})
 	}
 	componentDidUpdate(prevProps){
-		if (prevProps.note != this.props.note){
+		if (prevProps.chapter != this.props.chapter || prevProps.book != this.props.book || prevProps.note != this.props.note){
 			console.log('component did update note section');
 			console.log('value of props: ', this.props)
 			this.setState({value: this.props.note})
