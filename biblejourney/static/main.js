@@ -6,7 +6,7 @@
 // 		$('#home-next-link').is(":visible") ? $('#home-next-link').show() : $('#home-next-link').hide();
 // 	});
 // });
-$(document).ready(function () {
-  $('[data-toggle="tooltip"]').tooltip();
+// $(document).ready(function () {
+//   $('[data-toggle="tooltip"]').tooltip();
 
-});
+// });

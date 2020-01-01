@@ -4,19 +4,18 @@ class BookmarkPanel extends React.Component {
 		this.onClick = this.onClick.bind(this);
 	}
 	onClick(event){
-		console.log(event.target.value);
-		return this.props.handleGetRequest(event.target.value);
+		console.log(event.target.id);
+		return this.props.handleGetRequest(event.target.id);
 	}
 	renderBookmarks(){
 		let elements = [];
 		this.props.bookmarks.map((obj) => {
 			elements.push(
-				e('div', {className: 'mb-2 mt-2 col-sm-4'}, 
-					e('div', {className: 'card', key: obj.id}, 
+				e('div', {key: obj.id, className: 'mb-2 mt-2 col-sm-4'}, 
+					e('div', {className: 'card'}, 
 						e('img', {className: 'card-img-top', src: this.props.bible_bookmark_url, alt : 'Card image cap'}),
 						e('div', {className: 'card-body'}, 
-							e('h5', {className: 'card-title'}, obj.book + ' ' + obj.chapter),
-							e('button', {value: obj.book + ' ' + obj.chapter, onClick: this.onClick, className: 'btn btn-primary'}, 'Enter')
+							e('a', {id: obj.book + ' ' + obj.chapter, href: '#', onClick: this.onClick, className: 'card-title stretched-link'}, obj.book + ' ' + obj.chapter),
 						)
 					)
 				)

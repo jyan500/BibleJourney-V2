@@ -6,8 +6,8 @@ class NotePanel extends React.Component {
 		let elements = [];
 		this.props.notes.map((obj) => {
 			elements.push(
-				e('div', {className: 'mb-2 mt-2 col-sm-4'}, 
-					e('div', {className: 'card', key: obj.id}, 
+				e('div', {key: obj.id, className: 'mb-2 mt-2 col-sm-4'}, 
+					e('div', {className: 'card'}, 
 						e('div', {className: 'card-body'}, obj.book + ' ' + obj.chapter)
 					)
 				)

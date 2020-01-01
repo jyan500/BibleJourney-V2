@@ -12,6 +12,10 @@ ul {
   margin: 0;
 }
 
+a:hover {
+	text-decoration: none;
+}
+
 .bg-steel {
   background-color: #5f788a;
 }
@@ -116,4 +120,5 @@ a.article-title:hover {
 	padding-top: .45rem;
 	padding-bottom: .45rem;
 }
+
 
