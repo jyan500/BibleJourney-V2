@@ -10,8 +10,8 @@
 			notes: 
 			{% if current_user.is_authenticated %}	
 				{{ notes | tojson }}
-			{% endif %}
-
+			{% endif %},
+			bible_bookmark_url : "{{ url_for('static', filename = 'images/bible_bookmark.jpg') }}"
 		}
 	</script>	
 	<div class = "row" id = "main_section"></div>

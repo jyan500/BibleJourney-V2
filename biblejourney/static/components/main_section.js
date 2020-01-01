@@ -83,7 +83,7 @@ class MainSection extends React.Component {
 						isBookmark: r4.is_bookmark,
 						loading: false});
 			}).catch(e => {
-				this.setState({error: 'Book/Verse was not found!'})
+				this.setState({loading:false,error: 'Book/Verse was not found!'})
 			});
 		// .catch(e => {
 		// 	this.setState({error: 'Book/Verse was not found!'})
@@ -238,7 +238,7 @@ class MainSection extends React.Component {
 
 	renderBookmarkPanel(){
 		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
-			return e(BookmarkPanel, {bookmarks: this.state.bookmarks});
+			return e(BookmarkPanel, {bible_bookmark_url: window.objects.bible_bookmark_url, bookmarks: this.state.bookmarks, handleGetRequest: this.handleGetRequest});
 		}
 	}
 
