@@ -14,9 +14,13 @@ main = Blueprint('main', __name__)
 @main.route("/home")
 def home():
 	form = VersesForm()
-	all_bookmarks = Bookmark.query.filter_by(author = current_user).order_by(Bookmark.date_posted.desc()).all();
-	all_notes = Note.query.filter_by(author = current_user).order_by(Note.date_posted.desc()).all();
-	return render_template('main/home.html', form=form, bookmarks = convert_obj(all_bookmarks), notes = convert_obj(all_notes)) 
+	if (current_user.is_authenticated):
+		## get only the top 6 most recent bookmarks and notes
+		all_bookmarks = Bookmark.query.filter_by(author = current_user).order_by(Bookmark.date_posted.desc()).all()[0:6];
+		all_notes = Note.query.filter_by(author = current_user).order_by(Note.date_posted.desc()).all()[0:6];
+		return render_template('main/home.html', form=form, bookmarks = convert_obj(all_bookmarks), notes = convert_obj(all_notes)) 
+	else:
+		return render_template('main/home.html', form=form)
 
 @main.route("/about")
 def about():

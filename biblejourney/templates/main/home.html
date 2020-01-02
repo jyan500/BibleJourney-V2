@@ -3,15 +3,22 @@
 	 <script> 
 		// set the values of some server populated variables to be displayed in the react components (rather than loading via ajax) 
 		window.objects = { 
-			bookmarks :  
 			{% if current_user.is_authenticated %} 
-				{{ bookmarks | tojson }}
-			{% endif %},
-			notes: 
+
+				bookmarks :  
+				{{ bookmarks | tojson }},
+			{% endif %}
 			{% if current_user.is_authenticated %}	
-				{{ notes | tojson }}
-			{% endif %},
-			bible_bookmark_url : "{{ url_for('static', filename = 'images/bible_bookmark.jpg') }}"
+				notes: 
+				{{ notes | tojson }},
+			{% endif %}
+			bible_bookmark_url : "{{ url_for('static', filename = 'images/bible_bookmark.jpg') }}",
+			bible_notebook_url: "{{ url_for('static', filename = 'images/bible_notebook.jpg') }}",
+			{% if current_user.is_authenticated %}	
+				username: 
+				"{{ current_user.username }}"
+			{% endif %}
+
 		}
 	</script>	
 	<div class = "row" id = "main_section"></div>
@@ -23,5 +30,7 @@
 	<script src = "{{url_for('static', filename = 'components/loading_spinner.js')}}"></script>
 	<script src = "{{url_for('static', filename = 'components/bookmark_panel.js')}}"></script>
 	<script src = "{{url_for('static', filename = 'components/note_panel.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/home_sidebar.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/tinymce_wrapper.js')}}"></script>
 	<script src = "{{url_for('static', filename = 'components/main_section.js')}}"></script>
 {% endblock react_content %}

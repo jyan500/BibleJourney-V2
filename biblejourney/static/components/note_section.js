@@ -32,7 +32,11 @@ class NoteSection extends React.Component {
 		this.setState({isSuccess: false})
 		this.props.handleSaveNote(this.state.value);
 	}	
-	onChange(event){
+	onChange(value, delta, source){
+		/* Sort out API updates to avoid loop component updates */
+		if (source == 'api'){
+			return;
+		}
 		this.setState({value: event.target.value});
 	}
 	renderSubmit(){
@@ -42,7 +46,7 @@ class NoteSection extends React.Component {
 			)	
 		}	
 		else {
-			return e('div', {'className' : 'col-md-4'},
+			return e('div', {'className' : 'col-md-8'},
 				e('small', {'className': 'text-muted'}, 'Please ', e('a', {'href' : '/login'}, 'login'), ' to save your note!')
 			)
 		}
@@ -63,7 +67,7 @@ class NoteSection extends React.Component {
 				e('form', {'onSubmit' : this.onSubmit}, 
 					e('div', {'className' : 'form-group'},
 						e('label', {'className': 'text-muted form-control-label'}, 'Notes for ' + this.props.book + ' ' + this.props.chapter),
-						e('textarea', {'name' : 'user-note', 'className' : 'form-control', 'cols' : '30', 'rows' : '13', 'value' : this.state.value, 'onChange' : this.onChange}),
+						e('textarea', {'id' : 'editor', 'name' : 'user-note', 'className' : 'form-control', 'cols' : '30', 'rows' : '13', 'value' : this.state.value, 'onChange' : this.onChange}),
 					),
 					e('div', {'className': 'form-group row'}, 
 						this.renderSubmit(),

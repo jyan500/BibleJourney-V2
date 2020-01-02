@@ -244,8 +244,14 @@ class MainSection extends React.Component {
 
 	renderNotePanel(){
 		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
-			return e(NotePanel, {notes: this.state.notes})	
+			return e(NotePanel, {handleGetRequest: this.handleGetRequest, notes: this.state.notes, bible_notebook_url: window.objects.bible_notebook_url})	
 		}
+	}
+
+	renderHomeSideBar(){
+		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
+			return e(HomeSideBar, {username: window.objects.username})	
+		}	
 	}
 
 	render(){
@@ -259,6 +265,7 @@ class MainSection extends React.Component {
 					this.renderVerseSection()
 				),
 				e('div', {'className' : 'col-md-4'},
+					this.renderHomeSideBar(),
 					this.renderSideBar(),
 					this.renderNoteSection()
 				)
