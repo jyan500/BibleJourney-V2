@@ -1,5 +1,3 @@
-
-
 class NoteSection extends React.Component {
 	constructor(){
 		super()	
@@ -7,7 +5,7 @@ class NoteSection extends React.Component {
 			value: '',
 		}
 		this.onSubmit = this.onSubmit.bind(this);
-		this.onChange = this.onChange.bind(this);
+		this.onChangeEditor = this.onChangeEditor.bind(this);
 	}	
 	componentDidMount(){
 		// this.getExistingNote()	
@@ -32,12 +30,9 @@ class NoteSection extends React.Component {
 		this.setState({isSuccess: false})
 		this.props.handleSaveNote(this.state.value);
 	}	
-	onChange(value, delta, source){
-		/* Sort out API updates to avoid loop component updates */
-		if (source == 'api'){
-			return;
-		}
-		this.setState({value: event.target.value});
+	onChangeEditor(val){
+		console.log(val);
+		this.setState({value: val});
 	}
 	renderSubmit(){
 		if (window.appConfig.is_authenticated){
@@ -67,7 +62,8 @@ class NoteSection extends React.Component {
 				e('form', {'onSubmit' : this.onSubmit}, 
 					e('div', {'className' : 'form-group'},
 						e('label', {'className': 'text-muted form-control-label'}, 'Notes for ' + this.props.book + ' ' + this.props.chapter),
-						e('textarea', {'id' : 'editor', 'name' : 'user-note', 'className' : 'form-control', 'cols' : '30', 'rows' : '13', 'value' : this.state.value, 'onChange' : this.onChange}),
+						// e('textarea', {'id' : 'editor', 'name' : 'user-note', 'className' : 'form-control', 'cols' : '30', 'rows' : '13', 'value' : this.state.value, 'onChange' : this.onChange}),
+						e(TinyWrap, {content: this.state.value, onChange: this.onChangeEditor, config: {height: '450'} })
 					),
 					e('div', {'className': 'form-group row'}, 
 						this.renderSubmit(),

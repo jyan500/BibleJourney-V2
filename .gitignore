@@ -1,4 +1,4 @@
 *.sql
 *.csv
 *.env
-node_modules
+/biblejourney/static/node_modules
