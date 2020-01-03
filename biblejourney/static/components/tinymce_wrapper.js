@@ -60,7 +60,7 @@ class TinyWrap extends React.Component {
             events.forEach(function(e){
                 ed.on(e, function(){
                     if (tinywrap.props.onChange && typeof tinywrap.props.onChange == 'function')
-                    	// on Change returns a value rather than event
+                    	// passes in the current editor value rather than event
                         tinywrap.props.onChange(tinymce.get(tinywrap.state.editorInstance).getContent());
                 });
             });

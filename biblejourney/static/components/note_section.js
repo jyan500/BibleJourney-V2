@@ -66,8 +66,8 @@ class NoteSection extends React.Component {
 						e(TinyWrap, {content: this.state.value, onChange: this.onChangeEditor, 
 							config: {
 								height: '450',  
-        						plugins: 'lists',
-        						toolbar: 'numlist bullist',
+        						plugins: 'lists fullscreen link',
+        						toolbar: 'numlist bullist | fullscreen link',
         						image_advtab: true, 
         					}
         				})

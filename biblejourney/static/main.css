@@ -125,4 +125,9 @@ a.article-title:hover {
 	padding-bottom: .45rem;
 }
 
+/* remove mce unregistered message */
+.mce-notification-inner {
+	display:none!important;
+}
+
 
