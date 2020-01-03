@@ -63,7 +63,14 @@ class NoteSection extends React.Component {
 					e('div', {'className' : 'form-group'},
 						e('label', {'className': 'text-muted form-control-label'}, 'Notes for ' + this.props.book + ' ' + this.props.chapter),
 						// e('textarea', {'id' : 'editor', 'name' : 'user-note', 'className' : 'form-control', 'cols' : '30', 'rows' : '13', 'value' : this.state.value, 'onChange' : this.onChange}),
-						e(TinyWrap, {content: this.state.value, onChange: this.onChangeEditor, config: {height: '450'} })
+						e(TinyWrap, {content: this.state.value, onChange: this.onChangeEditor, 
+							config: {
+								height: '450',  
+        						plugins: 'lists',
+        						toolbar: 'numlist bullist',
+        						image_advtab: true, 
+        					}
+        				})
 					),
 					e('div', {'className': 'form-group row'}, 
 						this.renderSubmit(),

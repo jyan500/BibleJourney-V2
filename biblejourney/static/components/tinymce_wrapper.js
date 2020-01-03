@@ -1,6 +1,6 @@
 /* NOTE: 
 	***** ALL CREDIT goes to https://github.com/beezischillin in his repo: https://github.com/beezischillin/react-TinyWrap *****
-	I merely converted line 5 to be React.Component, and line 78 to use React.createElement since I'm not using JSX for this project, those were the only changes made
+	I merely converted line 5 to be React.Component, removed underscore from line 60, and line 78 to use React.createElement since I'm not using JSX for this project, those were the only changes made
 */
 class TinyWrap extends React.Component {
     constructor(props) {
