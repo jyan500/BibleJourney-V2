@@ -4,7 +4,8 @@ class HomeSideBar extends React.Component {
 	}
 	render(){
 		return e('div', {'className' : 'content-section'}, 
-			e('h3', {}, 'Welcome back ' + this.props.username)
+			e('h3', {}, 'Welcome back ' + this.props.username),
+			e(DailyVerse)
 		)	
 	}
 }

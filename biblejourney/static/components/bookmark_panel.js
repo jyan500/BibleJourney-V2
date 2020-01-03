@@ -10,12 +10,16 @@ class BookmarkPanel extends React.Component {
 	renderBookmarks(){
 		let elements = [];
 		this.props.bookmarks.map((obj) => {
+			let date = this.props.convertDate(obj.date_posted);
+			console.log('date in render notes: ', date.getMonth()+1);
+			let formatted_date = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
 			elements.push(
 				e('div', {key: obj.id, className: 'mb-2 mt-2 col-sm-4'}, 
 					e('div', {className: 'card hover-dark'}, 
 						e('img', {className: 'card-img-top', src: this.props.bible_bookmark_url, alt : 'Card image cap'}),
 						e('div', {className: 'card-body'}, 
 							e('a', {id: obj.book + ' ' + obj.chapter, href: '#', onClick: this.onClick, className: 'card-title stretched-link'}, obj.book + ' ' + obj.chapter),
+							e('p', {}, e('small', {}, formatted_date))
 						)
 					)
 				)

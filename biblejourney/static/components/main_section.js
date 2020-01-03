@@ -238,13 +238,13 @@ class MainSection extends React.Component {
 
 	renderBookmarkPanel(){
 		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
-			return e(BookmarkPanel, {bible_bookmark_url: window.objects.bible_bookmark_url, bookmarks: this.state.bookmarks, handleGetRequest: this.handleGetRequest});
+			return e(BookmarkPanel, {convertDate: this.convertDateFromMySQL, bible_bookmark_url: window.objects.bible_bookmark_url, bookmarks: this.state.bookmarks, handleGetRequest: this.handleGetRequest});
 		}
 	}
 
 	renderNotePanel(){
 		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
-			return e(NotePanel, {handleGetRequest: this.handleGetRequest, notes: this.state.notes, bible_notebook_url: window.objects.bible_notebook_url})	
+			return e(NotePanel, {convertDate: this.convertDateFromMySQL, handleGetRequest: this.handleGetRequest, notes: this.state.notes, bible_notebook_url: window.objects.bible_notebook_url})	
 		}
 	}
 
@@ -252,6 +252,18 @@ class MainSection extends React.Component {
 		if (window.appConfig.is_authenticated && (this.state.chapter == 0 || this.state.book == '')){
 			return e(HomeSideBar, {username: window.objects.username})	
 		}	
+	}
+
+	convertDateFromMySQL(dateString){
+		console.log(dateString);
+		let parts = dateString.replace('T', ' ').split(/[- :]/);
+		console.log('parts: ', parts);
+		// javascript months are indexed 0 to 11
+		let date = new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+		return date
+		// let d = new Date(Date.UTC(t[0], t[1]-1, t[2]))	
+		// console.log(d);
+		// return d.toString();
 	}
 
 	render(){

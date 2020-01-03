@@ -76,7 +76,6 @@
 			</nav>
 		</header>
 		<main role="main" class="container">
-			{% block react_content %}{% endblock react_content %}
 			<div class="row">
 				<div class="col-md-8">
 					{% with messages = get_flashed_messages(with_categories=true) %}
@@ -103,6 +102,7 @@
 						</p> -->
 				</div>
 			</div>
+			{% block react_content %}{% endblock react_content %}
 		</main>
 	</body>
 </html>
