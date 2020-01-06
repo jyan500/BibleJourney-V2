@@ -119,6 +119,29 @@ a.article-title:hover {
 	overflow-y: auto;
 }
 
+.fade-wrapper {
+	position: relative;	
+}
+.bottom-fade {
+	position: absolute;
+	width: 100%;
+	height: 180px;
+	z-index: 99;
+	bottom: 0;
+	left: 0;
+	background: url("/static/images/bottom-fade.png");
+}
+
+.bottom-fade a {
+	position: absolute;
+	top: 75%;
+	left: 50%;
+	transform: translateX(-50%);
+/*	padding-left: 20px;
+	padding-bottom: 20px;
+	margin-bottom: -5px;*/
+}
+
 /* overwrite bootstrap custom styling for alert when placed next to button*/
 .__custom-alert {
 	padding-top: .45rem;

@@ -99,7 +99,7 @@ def verses():
 		return render_template("main/verses.html", form=form)
 			
 	json_result = getVerseBodyRequest(search_param)
-	print(json_result, file = sys.stderr)
+	##print(json_result, file = sys.stderr)
 	if (json_result.get('error')):
 		flash("Verses could not be found!", "danger")
 		return render_template("main/verses.html", form=form)

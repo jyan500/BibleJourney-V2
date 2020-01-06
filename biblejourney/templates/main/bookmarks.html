@@ -8,7 +8,7 @@
 						{{ bookmarks[bookmark].bookmark }}	
 					</a>
 				</div>	
-				<div class = "card-body">
+				<div class = "card-body fade-wrapper">
 					<div class = "card-title">{{ bookmarks[bookmark].date.strftime('%m/%d/%Y') }}</div>	
 					<div class = "card-text">
 						{% for verse in bookmarks[bookmark].verses %}	
@@ -20,7 +20,9 @@
 								<br/><br/>
 							{% endif %}
 						{% endfor %}
-						<a href = "{{url_for('main.verses', verse=bookmarks[bookmark].bookmark)}}">See More</a>
+						<div class = "bottom-fade">
+							<a href = "{{url_for('main.verses', verse=bookmarks[bookmark].bookmark)}}">See More</a>
+						</div>
 					</div>
 				</div>
 			</div>
