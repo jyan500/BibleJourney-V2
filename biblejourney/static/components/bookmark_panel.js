@@ -32,7 +32,7 @@ class BookmarkPanel extends React.Component {
 			e('h3', {}, 'Bookmarks'),
 			e('p', {'className' : 'text-muted'}, 'Pick up where you left off!'),
 			this.renderBookmarks(),
-			e('small', {'className' : 'text-muted'}, e('a', {href : '#'}, 'View More Bookmarks'))
+			e('small', {'className' : 'text-muted'}, e('a', {href : '/bookmarks'}, 'View More Bookmarks'))
 		)
 	}	
 }

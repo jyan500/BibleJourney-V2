@@ -1,0 +1,45 @@
+{% extends 'layouts/layout.html' %}
+{% block content %}
+	<div class = "content-section">
+		{% for bookmark in bookmarks %}
+			<div class = "card mt-3 mb-3">
+				<div class = "card-header">
+					<a href = "{{url_for('main.verses', verse=bookmarks[bookmark].bookmark) }}">
+						{{ bookmarks[bookmark].bookmark }}	
+					</a>
+				</div>	
+				<div class = "card-body">
+					<div class = "card-title">{{ bookmarks[bookmark].date.strftime('%m/%d/%Y') }}</div>	
+					<div class = "card-text">
+						{% for verse in bookmarks[bookmark].verses %}	
+							<span>
+								<sup class = "mr-1">{{verse.verse}}</sup>	
+								{{verse.text}}
+							</span>
+							{% if (loop.index != 0 and loop.index % 5 == 0) %}
+								<br/><br/>
+							{% endif %}
+						{% endfor %}
+						<a href = "{{url_for('main.verses', verse=bookmarks[bookmark].bookmark)}}">See More</a>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		{% if prev_url %}
+			<a href = "{{ prev_url }}"> Previous </a>
+		{% endif %}
+		{% if next_url %}
+			<a href = "{{ next_url }}"> Next </a>
+		{% endif %}
+	</div>
+{% endblock content %}
+{% block sidebar_content %}
+	<div id = "react-sidebar"></div>
+	<script src = "{{url_for('static', filename = 'components/home_sidebar.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/daily_verse.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/loading_spinner.js')}}"></script>
+	<script>
+		let e = React.createElement;
+		ReactDOM.render(e(HomeSideBar, {username: '{{current_user.username}}'}), document.getElementById('react-sidebar'))
+	</script>
+{% endblock sidebar_content %}

@@ -9,6 +9,11 @@
 	position: fixed; 
 }
 
+.small-spinner-container {
+	display: flex;	
+	justify-content: center;
+	align-items: center;
+}
 .spinner {
 	position: absolute;
 	left: 50%;

@@ -109,7 +109,6 @@ def verses():
 		## algorithm in case the user misspells the book slightly
 		book = json_result['reference'].split(' ')[0]
 		verses = json_result['verses']
-		print(verses, file = sys.stderr)
 		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
 		is_bookmark = False
 		note_content = ''
@@ -121,7 +120,6 @@ def verses():
 		if (existing_note):
 			note_content =existing_note.content
 		react_state_object = {'search_query': search_param, 'verses': verses, 'book': book, 'chapter': chapter, 'num_chapters': num_chapters, 'is_bookmark': is_bookmark, 'note': note_content} 
-		print(react_state_object, file=sys.stderr)
 		return render_template("main/verses.html", form=form, react_state_object = react_state_object)
 	## version is world english bible by default until different versions are supported
 
@@ -139,6 +137,33 @@ def notes():
 		if pagination_obj.has_prev:
 			prev_url = url_for('main.notes', page=pagination_obj.prev_num)
 		return render_template('main/notes.html', notes = pagination_obj.items, next_url=next_url, prev_url=prev_url)
+
+@main.route('/bookmarks', methods = ["GET"])
+@login_required
+def bookmarks():
+	if (current_user.is_authenticated):
+		bookmarks_per_page = 5;
+		page = request.args.get('page', 1, type=int)
+		pagination_obj = Bookmark.query.filter_by(author = current_user).order_by(Bookmark.date_posted.desc()).paginate(page, bookmarks_per_page, False);
+		bookmark_content_map = dict() 
+		for bookmark in pagination_obj.items:
+			search_param = bookmark.book + ' ' + bookmark.chapter
+			if (bookmark.verse != None):
+				search_param += ':' + bookmark.verse
+			json = getVerseBodyRequest(search_param)
+			if (json.get('error')):
+				flash("One or more verses could not be found!", "danger")
+				return render_template("main/bookmarks.html", form=form)
+			else:
+				## only show the first 5 verses of each chapter
+				bookmark_content_map[search_param] = {'verses': json['verses'][0:5], 'bookmark' : search_param, 'date': bookmark.date_posted}
+		next_url = None
+		prev_url = None
+		if pagination_obj.has_next:
+			next_url = url_for('main.bookmarks', page=pagination_obj.next_num)
+		if pagination_obj.has_prev:
+			prev_url = url_for('main.bookmarks', page=pagination_obj.prev_num)
+		return render_template('main/bookmarks.html', bookmarks = bookmark_content_map, next_url=next_url, prev_url=prev_url)
 
 ## ENDPOINTS 
 @main.route("/note/retrieve", methods = ["GET"])
