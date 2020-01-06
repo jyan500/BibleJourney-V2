@@ -32,7 +32,7 @@ class NotePanel extends React.Component {
 			e('h3', {}, 'Notes'),
 			e('p', {'className' : 'text-muted'}, 'Your most recent notes!'),
 			this.renderNotes(),
-			e('small', {'className' : 'text-muted'}, e('a', {href : '#'}, 'View More Notes'))
+			e('small', {'className' : 'text-muted'}, e('a', {href : '/notes'}, 'View More Notes'))
 		)
 	}	
 }

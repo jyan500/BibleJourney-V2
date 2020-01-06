@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, flash, session, jsonify
+from flask import render_template, request, Blueprint, flash, session, jsonify, url_for
 from biblejourney.main.forms import VersesForm 
 from biblejourney.main.utils import *
 from biblejourney.models import BookRef, Note, Bookmark 
@@ -96,26 +96,51 @@ def verses():
 			is_only_chapter = False 
 	else:	
 		flash("Please search with one of the following formats: John 3, John 3:16, John 3:16-18", "danger")
-		return render_template("main/home.html", form=form)
+		return render_template("main/verses.html", form=form)
 			
 	json_result = getVerseBodyRequest(search_param)
 	print(json_result, file = sys.stderr)
 	if (json_result.get('error')):
 		flash("Verses could not be found!", "danger")
-		return render_template("main/home.html", form=form)
+		return render_template("main/verses.html", form=form)
 
 	else:
 		## the reason why the name of the book is retrieved from the API is because the API utilizes a fuzzy-search
 		## algorithm in case the user misspells the book slightly
 		book = json_result['reference'].split(' ')[0]
+		verses = json_result['verses']
+		print(verses, file = sys.stderr)
 		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
-		return render_template("main/home.html", form=form, verses=json_result, book = book, chapter = chapter, is_only_chapter = is_only_chapter, num_chapters=num_chapters)
+		is_bookmark = False
+		existing_bookmark = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).first()
+		if (existing_bookmark):
+			is_bookmark = True
+		existing_note = Note.query.filter_by(book=book, chapter=chapter, author= current_user).first()
+		react_state_object = {'search_query': search_param, 'verses': verses, 'book': book, 'chapter': chapter, 'num_chapters': num_chapters, 'is_bookmark': is_bookmark, 'note': existing_note.content} 
+		print(react_state_object, file=sys.stderr)
+		return render_template("main/verses.html", form=form, react_state_object = react_state_object)
 	## version is world english bible by default until different versions are supported
 
+@main.route('/notes', methods = ["GET"])
+@login_required
+def notes():
+	if (current_user.is_authenticated):
+		notes_per_page = 5;
+		page = request.args.get('page', 1, type=int)
+		pagination_obj = Note.query.filter_by(author = current_user).order_by(Note.date_posted.desc()).paginate(page, notes_per_page, False);
+		next_url = None
+		prev_url = None
+		if pagination_obj.has_next:
+			next_url = url_for('main.notes', page=pagination_obj.next_num)
+		if pagination_obj.has_prev:
+			prev_url = url_for('main.notes', page=pagination_obj.prev_num)
+		return render_template('main/notes.html', notes = pagination_obj.items, next_url=next_url, prev_url=prev_url)
+
+## ENDPOINTS 
 @main.route("/note/retrieve", methods = ["GET"])
 def get_note():
 	if (current_user.is_authenticated):
-		existing_note = Note.query.filter_by(book=request.args.get('book'), chapter=request.args.get('chapter')).first()
+		existing_note = Note.query.filter_by(book=request.args.get('book'), chapter=request.args.get('chapter'), author=current_user).first()
 		if (existing_note):
 			return jsonify({'status': 'Note found', 'book': existing_note.book, 'chapter': existing_note.chapter, 'content': existing_note.content})
 		else:
@@ -126,7 +151,7 @@ def get_note():
 @main.route("/note/save", methods = ["POST"])
 def save_note():
 	if (current_user.is_authenticated):
-		existing_note = Note.query.filter_by(book=request.json.get('book'), chapter=request.json.get('chapter')).first()
+		existing_note = Note.query.filter_by(book=request.json.get('book'), chapter=request.json.get('chapter'), author = current_user).first()
 		if (existing_note):
 			existing_note.content = request.json.get('note')
 			print("updated note", file = sys.stderr)

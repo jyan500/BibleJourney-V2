@@ -1,0 +1,245 @@
+const e = React.createElement;
+
+class Verses extends React.Component {
+	constructor(props){
+		super(props)
+		this.state = {
+			verses_list: [],
+			book_name: '',
+			num_chapters: 0,
+			chapter: 0,
+			error: '',
+			isParagraphMode: false,
+			isSaveNoteSuccess: false,
+			isBookmark: false,
+			note: '',
+			noteMessage: '',
+			loading: false,
+			loadingSpinner: false,
+			searchQuery: '', 
+			userAuthError: ''
+		}
+		if (window.objects.react_state_obj){
+			console.log(this.state.searchQuery)
+			this.state['searchQuery'] = window.objects.react_state_obj.search_query
+			this.state['verses_list'] = window.objects.react_state_obj.verses 
+			this.state['book_name'] = window.objects.react_state_obj.book 
+			this.state['num_chapters'] = window.objects.react_state_obj.num_chapters 
+			this.state['chapter'] = window.objects.react_state_obj.chapter 
+			this.state['isBookmark'] = window.objects.react_state_obj.is_bookmark
+			this.state['note'] = window.objects.react_state_obj.note
+		}
+		this.handleGetRequest = this.handleGetRequest.bind(this);
+		this.saveParagraphMode = this.saveParagraphMode.bind(this);
+		this.addOrDeleteBookmark = this.addOrDeleteBookmark.bind(this);
+		this.handleSaveNote = this.handleSaveNote.bind(this);
+		this.handleGetNote = this.handleGetNote.bind(this);
+		this.handleGetBookmark = this.handleGetBookmark.bind(this);
+	}	
+	componentDidMount(){
+		// this.handleGetAllBookmarks().then(
+		// 	response => {
+		// 		// if user is logged in, retrieve the bookmarks 
+		// 		if (response.status != 1){
+		// 			this.setState({bookmarks: response.bookmarks})
+		// 			console.log(this.state.bookmarks);
+		// 		}
+		// 	},
+		// 	error => {
+		// 		console.log("Error! Could not receive bookmarks");
+		// 	}
+		// );
+	}
+	handleGetRequest(verse){
+		// reset the existing status messages 
+		this.setState({isSaveNoteSuccess: false, noteMessage: '', note: '', isBookmark: false, loading: true});
+		const API_URL = 'https://bible-api.com/';
+		let url = API_URL + verse;
+		var r1, r2, r3, r4;
+		return fetch(url, {method: 'GET'})
+			.then(response => {
+				return response.json();
+			})
+			.then(json => {
+				console.log(json);
+				r1 = json;
+				return fetch('http://localhost:5000/book?book_name=' + json.verses[0].book_name);
+			})
+			.then(response => {
+				return response.json();
+			})
+			.then(json => {
+				r2 = json;
+				return this.handleGetNote(r1.verses[0].chapter, r1.verses[0].book_name);
+			}).then(json=>{
+				r3 = json;
+				return this.handleGetBookmark(r1.verses[0].chapter, r1.verses[0].book_name);
+			}).then(json=>{
+				r4 = json;
+				console.log('Setting bookmark: ' , json.is_bookmark);
+				this.setState({
+						searchQuery: verse, 
+						error: '', 
+						verses_list: r1.verses, 
+						book_name: r1.verses[0].book_name, 
+						chapter: r1.verses[0].chapter, 
+						num_chapters: r2.num_chapters, 
+						note: r3.content,
+						isBookmark: r4.is_bookmark,
+						loading: false});
+			}).catch(e => {
+				this.setState({loading:false,error: 'Book/Verse was not found!'})
+			});
+	}
+	handleGetNote(chapter, book){
+		let url = '/note/retrieve?book=' + book + '&chapter=' + chapter;
+		return fetch(url, {
+			method: 'GET',
+		}).then(response => {
+			return response.json()	
+		})
+	}
+	handleGetBookmark(chapter, book){
+		let url = '/bookmark/retrieve?book=' + book + '&chapter=' + chapter;
+			return fetch(url, {
+		}).then(response => {
+			return response.json()	
+		})
+	}
+	handleSaveNote(note){
+		console.log('in handle Save Note: ', note);	
+		let url = '/note/save';
+		this.setState({isSaveNoteSuccess: false})
+		return fetch(url, {
+			method: 'POST', 
+			body: JSON.stringify({'note': note, 'book' : this.state.book_name, 'chapter' : this.state.chapter}), 
+			headers: {'Content-Type': 'application/json'}
+			})
+			.then(response => {
+				return response.json()
+			}).then(json => {
+				this.setState({isSaveNoteSuccess: true, noteMessage: json.status})	
+			}).catch(e => {
+				this.setState({isSaveNoteSuccess: false, noteMessage: json.status})	
+			})
+	}
+	// create method to make API call to Bible API
+	renderSearchBar(){
+		let props = {'handleGetRequest' : this.handleGetRequest, 'searchQuery' : this.state.searchQuery, 'label': this.props.label};
+		return e(SearchBar, props)	
+	}
+
+	saveParagraphMode(isParagraphMode){
+		this.setState({isParagraphMode: isParagraphMode});
+	}
+	
+	// add bookmark if it doesn't exist, else delete it if the user unchecks
+	addOrDeleteBookmark(value){
+		let url = this.state.isBookmark ? '/bookmark/delete' : '/bookmark/save';
+		if (url != ''){
+			return fetch(url, {
+				method : 'POST',
+				body: JSON.stringify({'book' : this.state.book_name, 'chapter' : this.state.chapter}),
+				headers: {'Content-Type': 'application/json'}
+			})
+			.then(response => {
+				return response.json();	
+			})
+			.then(json => {
+				console.log(json);
+				this.setState({isBookmark: this.state.isBookmark ? false : true});					
+			}).catch(e => {
+
+			})
+		}
+	}
+
+	renderVerseSection(){
+		if (this.state.book_name != "" && this.state.chapter != ""){
+			return e(VerseSection, {
+				'error' : this.state.error, 
+				'verses' : this.state.verses_list, 
+				'book' : this.state.book_name, 
+				'num_chapters' : this.state.num_chapters,
+				'chapter' : this.state.chapter,
+				'handleGetRequest' : this.handleGetRequest,
+				'isParagraphMode' : this.state.isParagraphMode
+			})
+		}
+	}
+	renderSideBar(){
+		if (this.state.book_name != "" && this.state.chapter != ""){
+			return e(SideBar, {
+				'title' : this.props.sideBarTitle, 
+				'description' : this.props.sideBarDescription, 
+				'label' : this.props.checkBoxLabel,
+				'book' : this.state.book_name,
+				'chapter' : this.state.chapter,
+				'saveParagraphMode': this.saveParagraphMode,
+				'addOrDeleteBookmark': this.addOrDeleteBookmark,
+				'isBookmark' : this.state.isBookmark,
+				'handleGetBookmark': this.handleGetBookmark
+			})
+		}
+	}
+
+	renderNoteSection(){
+		if (this.state.book_name != "" && this.state.chapter != ""){
+			console.log('Note right now: ', this.state.note);
+			return e(NoteSection, {
+				'chapter' : this.state.chapter, 
+				'book' : this.state.book_name,
+				'handleSaveNote' : this.handleSaveNote,
+				'handleGetNote' : this.handleGetNote,
+				'isSuccessNoteSave' : this.state.isSaveNoteSuccess,
+				'noteMessage' : this.state.noteMessage,
+				'note' : this.state.note,
+			})
+		}
+	}
+
+	renderLoadingOverlay(){
+		if (this.state.loading){
+			return e(LoadingOverlay);
+		}	
+	}
+
+	renderLoadingSpinner(){
+		if (this.state.loadingSpinner){
+			return e(LoadingSpinner)	
+		}
+	}
+
+	convertDateFromMySQL(dateString){
+		console.log(dateString);
+		let parts = dateString.replace('T', ' ').split(/[- :]/);
+		console.log('parts: ', parts);
+		// javascript months are indexed 0 to 11
+		let date = new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+		return date
+		// let d = new Date(Date.UTC(t[0], t[1]-1, t[2]))	
+		// console.log(d);
+		// return d.toString();
+	}
+
+	render(){
+		return (
+			e(React.Fragment, null, 
+				e('div', {'className' : 'col-md-8'},
+					this.renderSearchBar(),
+					this.renderLoadingOverlay(),
+					this.renderVerseSection()
+				),
+				e('div', {'className' : 'col-md-4'},
+					this.renderSideBar(),
+					this.renderNoteSection()
+				)
+			)
+		);
+	}	
+}
+
+ReactDOM.render(
+	e(Verses, {'label' : 'Verse', 'sideBarDescription' : 'Verse display options', 'checkBoxLabel' : 'Paragraph Mode', 'sideBarTitle' : 'Options'}),
+	document.getElementById('verses-page')
+)

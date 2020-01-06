@@ -1,0 +1,32 @@
+{% extends 'layouts/layout.html' %}
+{% block content %}
+	<div class = "content-section">
+		{% for note in notes %}
+			<div class = "card mt-3 mb-3">
+				<div class = "card-header">
+					{{ note.book }} {{ note.chapter }}
+				</div>	
+				<div class = "card-body">
+					<div class = "card-title">{{ note.date_posted.strftime('%m/%d/%Y') }}</div>	
+					<div class = "card-text">{{ note.content | safe }}</div>
+				</div>
+			</div>
+		{% endfor %}
+		{% if prev_url %}
+			<a href = "{{ prev_url }}"> Previous </a>
+		{% endif %}
+		{% if next_url %}
+			<a href = "{{ next_url }}"> Next </a>
+		{% endif %}
+	</div>
+{% endblock content %}
+{% block sidebar_content %}
+	<div id = "react-sidebar"></div>
+	<script src = "{{url_for('static', filename = 'components/home_sidebar.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/daily_verse.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/loading_spinner.js')}}"></script>
+	<script>
+		let e = React.createElement;
+		ReactDOM.render(e(HomeSideBar, {username: '{{current_user.username}}'}), document.getElementById('react-sidebar'))
+	</script>
+{% endblock sidebar_content %}

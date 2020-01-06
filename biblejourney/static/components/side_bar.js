@@ -37,6 +37,14 @@ class SideBar extends React.Component {
 	}
 	onSubmit(event){
 	}
+	renderBookmarkChecked(){
+		if (window.appConfig.is_authenticated){
+			return e('div', {'className' : 'form-check'},
+				e('input', {'name' : 'isBookMarkChecked', 'onChange' : this.onChange, 'className' : 'form-check-input', 'type' : 'checkbox', 'checked': this.state.isBookMarkChecked}),
+				e('label', {'className' : 'form-check-label'}, 'Bookmark this chapter')
+			)	
+		}
+	}
 	render(){
 		return (
 			e('div', {'className' : 'content-section'}, 
@@ -47,10 +55,7 @@ class SideBar extends React.Component {
 						e('input', {'name': 'isParagraphMode', 'onChange' : this.onChange, 'className' : 'form-check-input', 'type' : 'checkbox', 'checked' : this.state.isParagraphMode}),
 						e('label', {'className' : 'form-check-label'}, this.props.label)
 					),
-					e('div', {'className' : 'form-check'},
-						e('input', {'name' : 'isBookMarkChecked', 'onChange' : this.onChange, 'className' : 'form-check-input', 'type' : 'checkbox', 'checked': this.state.isBookMarkChecked}),
-						e('label', {'className' : 'form-check-label'}, 'Bookmark this chapter')
-					),
+					this.renderBookmarkChecked(),
 				),
 			)
 		)

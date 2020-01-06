@@ -1,0 +1,26 @@
+{% extends 'layouts/layout.html' %}
+{% block react_content %}
+	 <script> 
+		// set the values of some server populated variables to be displayed in the react components (rather than loading via ajax) 
+		window.objects = { 
+			{% if react_state_object %}
+				react_state_obj: {{ react_state_object | tojson }},
+			{% endif %}
+			{% if current_user.is_authenticated %}	
+				username: 
+				"{{ current_user.username }}"
+			{% endif %}
+
+		}
+	</script>	
+	<div class = "row" id = "verses-page">
+	</div>
+	<script src = "{{url_for('static', filename = 'components/verse_section.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/search_bar.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/note_section.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/side_bar.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/loading_overlay.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/loading_spinner.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/tinymce_wrapper.js')}}"></script>
+	<script src = "{{url_for('static', filename = 'components/verses.js')}}"></script>
+{% endblock react_content %}
