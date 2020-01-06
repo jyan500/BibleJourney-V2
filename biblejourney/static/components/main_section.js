@@ -8,20 +8,6 @@ class MainSection extends React.Component {
 			notes: window.objects.notes,
 		}
 	}	
-	componentDidMount(){
-		// this.handleGetAllBookmarks().then(
-		// 	response => {
-		// 		// if user is logged in, retrieve the bookmarks 
-		// 		if (response.status != 1){
-		// 			this.setState({bookmarks: response.bookmarks})
-		// 			console.log(this.state.bookmarks);
-		// 		}
-		// 	},
-		// 	error => {
-		// 		console.log("Error! Could not receive bookmarks");
-		// 	}
-		// );
-	}
 	renderSearchBar(){
 		let props = {'label': this.props.label};
 		return e(SearchBar, props)	

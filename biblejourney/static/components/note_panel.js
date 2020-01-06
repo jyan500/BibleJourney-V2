@@ -18,7 +18,7 @@ class NotePanel extends React.Component {
 					e('div', {className: 'card hover-dark'}, 
 						e('img', {className: 'card-img-top', src: this.props.bible_notebook_url, alt : 'Card image cap'}),
 						e('div', {className: 'card-body'}, 
-							e('a', {id: obj.book + ' ' + obj.chapter, href: '#', onClick: this.onClick, className: 'card-title stretched-link'}, obj.book + ' ' + obj.chapter),
+							e('a', {id: obj.book + ' ' + obj.chapter, href: '/verses?verse=' + obj.book + ' ' + obj.chapter, onClick: this.onClick, className: 'card-title stretched-link'}, obj.book + ' ' + obj.chapter),
 							e('p', {}, e('small', {}, formatted_date))
 						)
 					)
