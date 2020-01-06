@@ -112,14 +112,19 @@ def verses():
 		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
 		is_bookmark = False
 		note_content = ''
-		existing_bookmark = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).first()
-		if (existing_bookmark):
-			is_bookmark = True
-		existing_note = Note.query.filter_by(book=book, chapter=chapter, author= current_user).first()
+		react_state_object = {'search_query': search_param, 'verses': verses, 'book': book, 'chapter': chapter, 'num_chapters': num_chapters} 
+		if (current_user.is_authenticated):
+			existing_bookmark = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).first()
+			if (existing_bookmark):
+				is_bookmark = True
+			existing_note = Note.query.filter_by(book=book, chapter=chapter, author= current_user).first()
+			if (existing_note):
+				note_content =existing_note.content
 
-		if (existing_note):
-			note_content =existing_note.content
-		react_state_object = {'search_query': search_param, 'verses': verses, 'book': book, 'chapter': chapter, 'num_chapters': num_chapters, 'is_bookmark': is_bookmark, 'note': note_content} 
+			## add the remaining two attributes if the user is logged in 
+			react_state_object['is_bookmark'] = is_bookmark 
+			react_state_object['note'] = note_content
+
 		return render_template("main/verses.html", form=form, react_state_object = react_state_object)
 	## version is world english bible by default until different versions are supported
 
