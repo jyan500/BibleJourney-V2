@@ -64,25 +64,27 @@ class VerseSection extends React.Component {
 	renderVerseElements(){
 		let verse_elements = [];
 		if (!this.props.isParagraphMode){
-			verse_elements = this.props.verses.map(function(verse){
-				return e('p', {key: verse.verse}, 
-							e('sup', {key : verse.verse, 'className' : 'mr-1'}, verse.verse),
-							verse.text
-						)	
+			verse_elements = this.props.verses.map((verse, i) => {
+				// return e('p', {key: verse.verse}, 
+				// 			e('sup', {key : verse.verse, 'className' : 'mr-1'}, verse.verse),
+				// 			verse.text
+				// 		)	
+				return e(IndividualVerse, {key: i, 'isParagraphMode': this.props.isParagraphMode, 'book': this.props.book, 'chapter' : this.props.chapter, 'verseNumber': verse.verse, 'verseText': verse.text})
 			});
 		}	
 		else {
-			this.props.verses.forEach(function(verse, i){
+			this.props.verses.forEach((verse, i) => {
 				console.log(verse);
 				if (i != 0 && i % 5 == 0){
 					verse_elements.push(e('br', null, null))
 					verse_elements.push(e('br', null, null))
 				}
 				verse_elements.push(
-					e('span', null, 
-						e('sup', {key: verse.verse, 'className' : 'mr-1'}, verse.verse),
-						verse.text
-					)
+					e(IndividualVerse, {key: i, 'isParagraphMode': this.props.isParagraphMode, 'book': this.props.book, 'chapter' : this.props.chapter, 'verseNumber': verse.verse, 'verseText': verse.text})
+					// e('span', null, 
+					// 	e('sup', {key: verse.verse, 'className' : 'mr-1'}, verse.verse),
+					// 	verse.text
+					// )
 				)
 			})
 		}

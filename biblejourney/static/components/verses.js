@@ -154,6 +154,26 @@ class Verses extends React.Component {
 		}
 	}
 
+	// addOrDeleteBookmarkVerse(book, chapter, verse){
+	// 	let url = this.state.isBookmark ? '/bookmark/delete' : '/bookmark/save';
+	// 	if (url != ''){
+	// 		return fetch(url, {
+	// 			method : 'POST',
+	// 			body: JSON.stringify({'book' : book, 'chapter' : chapter, 'verse' : verse}),
+	// 			headers: {'Content-Type': 'application/json'}
+	// 		})
+	// 		.then(response => {
+	// 			return response.json();	
+	// 		})
+	// 		.then(json => {
+	// 			console.log(json);
+	// 			this.setState({isBookmark: this.state.isBookmark ? false : true});					
+	// 		}).catch(e => {
+
+	// 		})
+	// 	}	
+	// }
+
 	renderVerseSection(){
 		if (this.state.book_name != "" && this.state.chapter != ""){
 			return e(VerseSection, {

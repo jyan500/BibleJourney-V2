@@ -25,20 +25,40 @@ class TinyWrap extends React.Component {
         return false;
     }
 
-    componentWillReceiveProps(props) {
+    // componentWillReceiveProps(props) {
+    //     var tinywrap = this;
+
+    //     if (tinymce.get(this.state.editorInstance) && tinymce.get(this.state.editorInstance).initialized) {
+    //         if (tinymce.get(tinywrap.state.editorInstance).getContent() != props.content)
+    //             tinymce.get(this.state.editorInstance).setContent((props.content) ? props.content : '');
+    //     } else {
+    //         if (this.delayedUpdate)
+    //             clearInterval(this.delayedUpdate);
+
+    //         this.delayedUpdate = setInterval(function(){
+    //             if (tinymce.get(tinywrap.state.editorInstance) && tinymce.get(tinywrap.state.editorInstance).initialized) {
+    //                 if (tinymce.get(tinywrap.state.editorInstance).getContent() != props.content)
+    //                     tinymce.get(tinywrap.state.editorInstance).setContent((props.content) ? props.content : '');
+
+    //                 clearInterval(tinywrap.delayedUpdate);
+    //             }
+    //         }, 100);
+    //     }
+    // }
+    componentWillReceiveProps(prevProps) {
         var tinywrap = this;
 
         if (tinymce.get(this.state.editorInstance) && tinymce.get(this.state.editorInstance).initialized) {
-            if (tinymce.get(tinywrap.state.editorInstance).getContent() != props.content)
-                tinymce.get(this.state.editorInstance).setContent((props.content) ? props.content : '');
+            if (tinymce.get(tinywrap.state.editorInstance).getContent() != prevProps.content)
+                tinymce.get(this.state.editorInstance).setContent((prevProps.content) ? prevProps.content : '');
         } else {
             if (this.delayedUpdate)
                 clearInterval(this.delayedUpdate);
 
             this.delayedUpdate = setInterval(function(){
                 if (tinymce.get(tinywrap.state.editorInstance) && tinymce.get(tinywrap.state.editorInstance).initialized) {
-                    if (tinymce.get(tinywrap.state.editorInstance).getContent() != props.content)
-                        tinymce.get(tinywrap.state.editorInstance).setContent((props.content) ? props.content : '');
+                    if (tinymce.get(tinywrap.state.editorInstance).getContent() != prevProps.content)
+                        tinymce.get(tinywrap.state.editorInstance).setContent((prevProps.content) ? prevProps.content : '');
 
                     clearInterval(tinywrap.delayedUpdate);
                 }
