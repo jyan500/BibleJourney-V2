@@ -1,6 +1,6 @@
 /* NOTE: 
 	***** ALL CREDIT goes to https://github.com/beezischillin in his repo: https://github.com/beezischillin/react-TinyWrap *****
-	I merely converted line 5 to be React.Component, removed underscore from line 60, and line 78 to use React.createElement since I'm not using JSX for this project, those were the only changes made
+	I converted line 5 to be React.Component, converted the componentWillReceiveProps to the more updated componentDidUpdate, removed underscore from line 60, and line 78 to use React.createElement since I'm not using JSX for this project, those were the only changes made
 */
 class TinyWrap extends React.Component {
     constructor(props) {
@@ -16,7 +16,7 @@ class TinyWrap extends React.Component {
         });
     };
 
-    shouldComponentUpdate() {return false;}
+    //shouldComponentUpdate() {return false;}
 
     getInstance() {
         if (tinymce.get(this.state.editorInstance) && tinymce.get(this.state.editorInstance).initialized)
@@ -45,25 +45,31 @@ class TinyWrap extends React.Component {
     //         }, 100);
     //     }
     // }
-    componentWillReceiveProps(prevProps) {
+
+    // converted from componentWillReceiveProps to getDerivedStateFromProps
+    // set the tinyMCE's content based on the props that WILL be received, comparing it to its current editor content
+    static getDerivedStateFromProps(nextProps, prevState) {
         var tinywrap = this;
 
-        if (tinymce.get(this.state.editorInstance) && tinymce.get(this.state.editorInstance).initialized) {
-            if (tinymce.get(tinywrap.state.editorInstance).getContent() != prevProps.content)
-                tinymce.get(this.state.editorInstance).setContent((prevProps.content) ? prevProps.content : '');
-        } else {
-            if (this.delayedUpdate)
-                clearInterval(this.delayedUpdate);
+        if (tinymce.get(prevState.editorInstance) && tinymce.get(prevState.editorInstance).initialized) {
+            if (tinymce.get(prevState.editorInstance).getContent() != nextProps.content){
+                tinymce.get(prevState.editorInstance).setContent((nextProps.content) ? nextProps.content : '');
+            }
 
-            this.delayedUpdate = setInterval(function(){
-                if (tinymce.get(tinywrap.state.editorInstance) && tinymce.get(tinywrap.state.editorInstance).initialized) {
-                    if (tinymce.get(tinywrap.state.editorInstance).getContent() != prevProps.content)
-                        tinymce.get(tinywrap.state.editorInstance).setContent((prevProps.content) ? prevProps.content : '');
+        // } else {
+        //     if (this.delayedUpdate)
+        //         clearInterval(this.delayedUpdate);
 
-                    clearInterval(tinywrap.delayedUpdate);
-                }
-            }, 100);
+        //     this.delayedUpdate = setInterval(function(){
+        //         if (tinymce.get(tinywrap.state.editorInstance) && tinymce.get(tinywrap.state.editorInstance).initialized) {
+        //             if (tinymce.get(tinywrap.state.editorInstance).getContent() != nextProps.content)
+        //                 tinymce.get(tinywrap.state.editorInstance).setContent((nextProps.content) ? nextProps.content : '');
+
+        //             clearInterval(tinywrap.delayedUpdate);
+        //         }
+        //     }, 100);
         }
+    	return null;
     }
 
     componentDidMount() {
