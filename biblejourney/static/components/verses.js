@@ -17,7 +17,9 @@ class Verses extends React.Component {
 			loading: false,
 			loadingSpinner: false,
 			searchQuery: '', 
-			userAuthError: ''
+			userAuthError: '',
+			isShowToolBar: false,
+			toolBarVerses: {'book' : '', 'chapter' : 0, 'verses': new Set()}
 		}
 		if (window.objects.react_state_obj){
 			console.log(this.state.searchQuery)
@@ -35,6 +37,8 @@ class Verses extends React.Component {
 		this.handleSaveNote = this.handleSaveNote.bind(this);
 		this.handleGetNote = this.handleGetNote.bind(this);
 		this.handleGetBookmark = this.handleGetBookmark.bind(this);
+		this.showHideToolBar = this.showHideToolBar.bind(this);
+		this.updateToolBar = this.updateToolBar.bind(this);
 	}	
 	componentDidMount(){
 		// this.handleGetAllBookmarks().then(
@@ -107,7 +111,7 @@ class Verses extends React.Component {
 		})
 	}
 	handleSaveNote(note){
-		console.log('in handle Save Note: ', note);	
+		// console.log('in handle Save Note: ', note);	
 		let url = '/note/save';
 		this.setState({isSaveNoteSuccess: false})
 		return fetch(url, {
@@ -131,6 +135,16 @@ class Verses extends React.Component {
 
 	saveParagraphMode(isParagraphMode){
 		this.setState({isParagraphMode: isParagraphMode});
+	}
+
+	showHideToolBar(value){
+		this.setState({isShowToolBar: value});
+	}
+
+	updateToolBar(book, chapter, verse){
+		let previousVerses = this.state.toolBarVerses.verses;
+		previousVerses.add(verse);
+		this.setState({toolBarVerses: {'book' : book, 'chapter': chapter, 'verses' : previousVerses}});
 	}
 	
 	// add bookmark if it doesn't exist, else delete it if the user unchecks
@@ -183,7 +197,11 @@ class Verses extends React.Component {
 				'num_chapters' : this.state.num_chapters,
 				'chapter' : this.state.chapter,
 				'handleGetRequest' : this.handleGetRequest,
-				'isParagraphMode' : this.state.isParagraphMode
+				'isParagraphMode' : this.state.isParagraphMode,
+				'showHideToolBar' : this.showHideToolBar,
+				'isShowToolBar' : this.state.isShowToolBar,
+				'toolBarVerses': this.state.toolBarVerses,
+				'updateToolBar': this.updateToolBar
 			})
 		}
 	}

@@ -4,8 +4,14 @@ class IndividualVerse extends React.Component {
 		this.onClick = this.onClick.bind(this);
 	}
 	onClick(event){
+		console.log('book: ', this.props.book, 'chapter: ', this.props.chapter, 'Verse Number: ', this.props.verseNumber);
+		// show the toolbar
+		// add the verse numbers to an array
+		// when the user clicks the highlight button, construct the final verse from the verse numbers from the array
+		// if the toolbar is already shown when the user clicks on a verse, do not show the toolbar already
 		// alert('Book: ', this.props.book, 'Chapter: ', this.props.chapter, 'Verse Number: ', this.props.verseNumber, 'Verse Text: ', this.props.verseText);
-		// this.props.showToolBar();
+		this.props.showHideToolBar(true);
+		this.props.updateToolBar(this.props.book, this.props.chapter, this.props.verseNumber);
 	}
 	render(){
 		if (this.props.isParagraphMode){
@@ -29,5 +35,7 @@ VerseSection.propTypes = {
 	verseNumber: PropTypes.number,
 	verseText: PropTypes.string,
 	bookmarkVerse: PropTypes.func,
-	isHighlighted: PropTypes.bool
+	isHighlighted: PropTypes.bool,
+	showHideToolBar: PropTypes.func,
+	updateToolBar: PropTypes.func
 }

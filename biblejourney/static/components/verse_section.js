@@ -69,7 +69,18 @@ class VerseSection extends React.Component {
 				// 			e('sup', {key : verse.verse, 'className' : 'mr-1'}, verse.verse),
 				// 			verse.text
 				// 		)	
-				return e(IndividualVerse, {key: i, 'isParagraphMode': this.props.isParagraphMode, 'book': this.props.book, 'chapter' : this.props.chapter, 'verseNumber': verse.verse, 'verseText': verse.text})
+				return e(IndividualVerse, 
+					{
+						key: i, 
+						'isParagraphMode': this.props.isParagraphMode, 
+						'book': this.props.book, 
+						'chapter' : this.props.chapter, 
+						'verseNumber': verse.verse, 
+						'verseText': verse.text,
+						'showHideToolBar' : this.props.showHideToolBar,
+						'updateToolBar' : this.props.updateToolBar
+					}
+				)
 			});
 		}	
 		else {
@@ -80,7 +91,18 @@ class VerseSection extends React.Component {
 					verse_elements.push(e('br', null, null))
 				}
 				verse_elements.push(
-					e(IndividualVerse, {key: i, 'isParagraphMode': this.props.isParagraphMode, 'book': this.props.book, 'chapter' : this.props.chapter, 'verseNumber': verse.verse, 'verseText': verse.text})
+					e(IndividualVerse, 
+						{
+							key: i, 
+							'isParagraphMode': this.props.isParagraphMode, 
+							'book': this.props.book, 
+							'chapter' : this.props.chapter, 
+							'verseNumber': verse.verse, 
+							'verseText': verse.text,
+							'showHideToolBar' : this.props.showHideToolBar,
+							'updateToolBar' : this.props.updateToolBar
+						}
+					)
 					// e('span', null, 
 					// 	e('sup', {key: verse.verse, 'className' : 'mr-1'}, verse.verse),
 					// 	verse.text
@@ -89,6 +111,11 @@ class VerseSection extends React.Component {
 			})
 		}
 		return e(React.Fragment, null, verse_elements)
+	}
+	renderVerseToolBar(){
+		if (this.props.isShowToolBar){
+			return e(VerseToolBar, {'toolBarVerses': this.props.toolBarVerses});	
+		}
 	}
 	render(){
 		
@@ -104,9 +131,12 @@ class VerseSection extends React.Component {
 				e('div', {'className' : 'content-section'},
 					e('div', {'className' : 'row verses'}, 
 						e(React.Fragment, null, this.renderPrevious()),
-						e('div', {'className' : 'col-md-10 pl-2'}, 
-							e(React.Fragment, null, this.renderTitle()),
-							e(React.Fragment, null, this.renderVerseElements()),
+						e('div', {'className' : 'verse-container col-md-10 pl-2'}, 
+							e('div', {'className' : 'verse-container-inner'}, 
+								e(React.Fragment, null, this.renderTitle()),
+								e(React.Fragment, null, this.renderVerseElements()),
+								e(React.Fragment, null, this.renderVerseToolBar())
+							),
 						),
 						e(React.Fragment, null, this.renderNext())
 					)
@@ -119,9 +149,14 @@ class VerseSection extends React.Component {
 
 VerseSection.propTypes = {
 	verses: PropTypes.array.isRequired,
-	book_name: PropTypes.string,
+	book: PropTypes.string,
 	num_chapters: PropTypes.number,
 	chapter: PropTypes.number,
 	error: PropTypes.string,
-	handleGetRequest: PropTypes.func
+	isParagraphMode: PropTypes.bool,
+	handleGetRequest: PropTypes.func,
+	showHideToolBar: PropTypes.func,
+	isShowToolBar: PropTypes.bool,
+	updateToolBar: PropTypes.func,
+	toolBarVerses: PropTypes.object
 }
