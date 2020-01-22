@@ -48,6 +48,7 @@ class Bookmark(db.Model):
 	book = db.Column(db.String(20))
 	chapter = db.Column(db.String(20))
 	verse =  db.Column(db.String(20))	
+	highlight_color = db.Column(db.String(20))
 	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 	def __repr__(self):

@@ -69,6 +69,7 @@ class VerseSection extends React.Component {
 				// 			e('sup', {key : verse.verse, 'className' : 'mr-1'}, verse.verse),
 				// 			verse.text
 				// 		)	
+				let selected = this.props.toolBarVerses.verses.has(verse.verse);
 				return e(IndividualVerse, 
 					{
 						key: i, 
@@ -77,8 +78,10 @@ class VerseSection extends React.Component {
 						'chapter' : this.props.chapter, 
 						'verseNumber': verse.verse, 
 						'verseText': verse.text,
+						'isShowToolBar': this.props.isShowToolBar,
 						'showHideToolBar' : this.props.showHideToolBar,
-						'updateToolBar' : this.props.updateToolBar
+						'updateToolBar' : this.props.updateToolBar,
+						'isSelected': selected
 					}
 				)
 			});
@@ -86,6 +89,7 @@ class VerseSection extends React.Component {
 		else {
 			this.props.verses.forEach((verse, i) => {
 				console.log(verse);
+				let selected = this.props.toolBarVerses.verses.has(verse.verse);
 				if (i != 0 && i % 5 == 0){
 					verse_elements.push(e('br', null, null))
 					verse_elements.push(e('br', null, null))
@@ -99,8 +103,10 @@ class VerseSection extends React.Component {
 							'chapter' : this.props.chapter, 
 							'verseNumber': verse.verse, 
 							'verseText': verse.text,
+							'isShowToolBar': this.props.isShowToolBar,
 							'showHideToolBar' : this.props.showHideToolBar,
-							'updateToolBar' : this.props.updateToolBar
+							'updateToolBar' : this.props.updateToolBar,
+							'isSelected' : selected
 						}
 					)
 					// e('span', null, 
@@ -114,7 +120,7 @@ class VerseSection extends React.Component {
 	}
 	renderVerseToolBar(){
 		if (this.props.isShowToolBar){
-			return e(VerseToolBar, {'toolBarVerses': this.props.toolBarVerses});	
+			return e(VerseToolBar, {'highlightVerses': this.props.highlightVerses, 'toolBarVerses': this.props.toolBarVerses, 'isShowToolBar': this.props.isShowToolBar, 'showHideToolBar': this.props.showHideToolBar});	
 		}
 	}
 	render(){
@@ -158,5 +164,6 @@ VerseSection.propTypes = {
 	showHideToolBar: PropTypes.func,
 	isShowToolBar: PropTypes.bool,
 	updateToolBar: PropTypes.func,
-	toolBarVerses: PropTypes.object
+	toolBarVerses: PropTypes.object,
+	highlightVerses: PropTypes.func
 }

@@ -39,6 +39,7 @@ class Verses extends React.Component {
 		this.handleGetBookmark = this.handleGetBookmark.bind(this);
 		this.showHideToolBar = this.showHideToolBar.bind(this);
 		this.updateToolBar = this.updateToolBar.bind(this);
+		this.highlightVerses = this.highlightVerses.bind(this);
 	}	
 	componentDidMount(){
 		// this.handleGetAllBookmarks().then(
@@ -138,7 +139,9 @@ class Verses extends React.Component {
 	}
 
 	showHideToolBar(value){
-		this.setState({isShowToolBar: value});
+
+		let clearToolBarVerses = {'book' : '', 'chapter' : 0, 'verses': new Set()};
+		this.setState({isShowToolBar: value, toolBarVerses: clearToolBarVerses});
 	}
 
 	updateToolBar(book, chapter, verse){
@@ -166,6 +169,10 @@ class Verses extends React.Component {
 
 			})
 		}
+	}
+
+	highlightVerses(){
+
 	}
 
 	// addOrDeleteBookmarkVerse(book, chapter, verse){
@@ -201,7 +208,8 @@ class Verses extends React.Component {
 				'showHideToolBar' : this.showHideToolBar,
 				'isShowToolBar' : this.state.isShowToolBar,
 				'toolBarVerses': this.state.toolBarVerses,
-				'updateToolBar': this.updateToolBar
+				'updateToolBar': this.updateToolBar,
+				'highlightVerses': this.highlightVerses
 			})
 		}
 	}

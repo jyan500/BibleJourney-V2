@@ -15,13 +15,30 @@ class IndividualVerse extends React.Component {
 	}
 	render(){
 		if (this.props.isParagraphMode){
-			return e('span', {key: this.props.verseNumber, onClick: this.onClick, style: {'color': this.props.isHighlighted ? this.props.color : 'black'}}, 
+			return e('span', {	
+							key: this.props.verseNumber, 
+							onClick: this.onClick, 
+							style: 
+								{
+									'color': this.props.isHighlighted ? this.props.color : 'black',
+									'outlineStyle' : this.props.isSelected ? 'dotted' : ''
+								}
+							}, 
 					e('sup', {'className' : 'mr-1'}, this.props.verseNumber),
 					this.props.verseText	
 			);
 		}
 		else {
-			return e('p', {key: this.props.verseNumber, 'onClick': this.onClick, 'style': {'color': this.props.isHighlighted ? this.props.color : 'black'}}, 
+			return e('p', {
+						key: this.props.verseNumber, 
+						'onClick': this.onClick, 
+						'style': 
+							{
+								'color': this.props.isHighlighted ? this.props.color : 'black',
+								'outlineStyle' : this.props.isSelected ? 'dotted' : '',
+								'outlineColor' : this.props.isSelected ? '#C0C0C0' : '',
+							}
+						}, 
 					e('sup', {'className' : 'mr-1'}, this.props.verseNumber),
 					this.props.verseText	
 			);	
@@ -37,5 +54,6 @@ VerseSection.propTypes = {
 	bookmarkVerse: PropTypes.func,
 	isHighlighted: PropTypes.bool,
 	showHideToolBar: PropTypes.func,
-	updateToolBar: PropTypes.func
+	updateToolBar: PropTypes.func,
+	isSelected: PropTypes.bool,
 }
