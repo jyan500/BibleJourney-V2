@@ -120,6 +120,7 @@ a.article-title:hover {
 	display: block;
 }
 
+/* verse_section.js */
 .verses {
 	position: relative;
 }
@@ -134,8 +135,9 @@ a.article-title:hover {
 ::-webkit-scrollbar{
 	width: 0px;
 	background: transparent;
-}	
+}
 
+/* verse_toolbar.js */
 .toolbar {
 	z-index : 99;
 	bottom : 0;
@@ -166,7 +168,7 @@ a.article-title:hover {
 
 }
 
-
+/* bookmarks.html */
 .fade-wrapper {
 	position: relative;	
 }

@@ -18,6 +18,7 @@ class Verses extends React.Component {
 			loadingSpinner: false,
 			searchQuery: '', 
 			userAuthError: '',
+			highlightedVerses: [],
 			isShowToolBar: false,
 			toolBarVerses: {'book' : '', 'chapter' : 0, 'verses': new Set()}
 		}
@@ -30,6 +31,7 @@ class Verses extends React.Component {
 			this.state['chapter'] = window.objects.react_state_obj.chapter 
 			this.state['isBookmark'] = window.objects.react_state_obj.is_bookmark
 			this.state['note'] = window.objects.react_state_obj.note
+			this.state['highlightedVerses'] = window.objects.react_state_obj.highlighted_verses
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
 		this.saveParagraphMode = this.saveParagraphMode.bind(this);
@@ -37,6 +39,7 @@ class Verses extends React.Component {
 		this.handleSaveNote = this.handleSaveNote.bind(this);
 		this.handleGetNote = this.handleGetNote.bind(this);
 		this.handleGetBookmark = this.handleGetBookmark.bind(this);
+		this.handleGetHighlightedVerses = this.handleGetHighlightedVerses.bind(this);
 		this.showHideToolBar = this.showHideToolBar.bind(this);
 		this.updateToolBar = this.updateToolBar.bind(this);
 		this.highlightVerses = this.highlightVerses.bind(this);
@@ -60,7 +63,7 @@ class Verses extends React.Component {
 		this.setState({isSaveNoteSuccess: false, noteMessage: '', note: '', isBookmark: false, loading: true});
 		const API_URL = 'https://bible-api.com/';
 		let url = API_URL + verse;
-		var r1, r2, r3, r4;
+		var r1, r2, r3, r4, r5;
 		return fetch(url, {method: 'GET'})
 			.then(response => {
 				return response.json();
@@ -80,7 +83,11 @@ class Verses extends React.Component {
 				r3 = json;
 				return this.handleGetBookmark(r1.verses[0].chapter, r1.verses[0].book_name);
 			}).then(json=>{
-				r4 = json;
+				r4 = json;				
+				return this.handleGetHighlightedVerses(r1.verses[0].chapter, r1.verses[0].book_name);
+			}).then(json=>{
+				r5 = json;
+				console.log(r5.highlighted_verses);
 				console.log('Setting bookmark: ' , json.is_bookmark);
 				this.setState({
 						searchQuery: verse, 
@@ -91,6 +98,7 @@ class Verses extends React.Component {
 						num_chapters: r2.num_chapters, 
 						note: r3.content,
 						isBookmark: r4.is_bookmark,
+						highlightedVerses: r5.highlighted_verses ? r5.highlighted_verses : [],
 						loading: false});
 			}).catch(e => {
 				this.setState({loading:false,error: 'Book/Verse was not found!'})
@@ -109,6 +117,14 @@ class Verses extends React.Component {
 			return fetch(url, {
 		}).then(response => {
 			return response.json()	
+		})
+	}
+	handleGetHighlightedVerses(chapter, book){
+		let url = '/bookmark/verses/retrieve?book=' + book + '&chapter=' + chapter;
+		return fetch(url, {
+		
+		}).then(response => {
+			return response.json();	
 		})
 	}
 	handleSaveNote(note){
@@ -171,8 +187,31 @@ class Verses extends React.Component {
 		}
 	}
 
-	highlightVerses(){
+	highlightVerses(color){
+		let url = '/bookmark/verses/save';
+		if (url != ''){
+			return fetch(url, {
+				method : 'POST',
+				body: JSON.stringify(
+					{
+						'book' : this.state.toolBarVerses.book, 
+						'chapter' : this.state.toolBarVerses.chapter, 
+						'verses' : Array.from(this.state.toolBarVerses.verses),
+						'color': color
+					}
+					),
+				headers: {'Content-Type': 'application/json'}
+			})
+			.then(response => {
+				return response.json();	
+			})
+			.then(json => {
+				console.log(json);
+				// this.setState({isBookmark: this.state.isBookmark ? false : true});					
+			}).catch(e => {
 
+			})
+		}	
 	}
 
 	// addOrDeleteBookmarkVerse(book, chapter, verse){
@@ -209,7 +248,8 @@ class Verses extends React.Component {
 				'isShowToolBar' : this.state.isShowToolBar,
 				'toolBarVerses': this.state.toolBarVerses,
 				'updateToolBar': this.updateToolBar,
-				'highlightVerses': this.highlightVerses
+				'highlightVerses': this.highlightVerses,
+				'highlightedVerses': this.state.highlightedVerses
 			})
 		}
 	}

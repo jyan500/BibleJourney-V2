@@ -14,13 +14,14 @@ class IndividualVerse extends React.Component {
 		this.props.updateToolBar(this.props.book, this.props.chapter, this.props.verseNumber);
 	}
 	render(){
+		console.log('highlight color for ' + this.props.book + ' ' + this.props.chapter + ' ' + this.props.verseNumber + ' ' + this.props.highlightColor);
 		if (this.props.isParagraphMode){
 			return e('span', {	
 							key: this.props.verseNumber, 
 							onClick: this.onClick, 
 							style: 
 								{
-									'color': this.props.isHighlighted ? this.props.color : 'black',
+									'backgroundColor': this.props.highlightColor !== '' ? this.props.highlightColor : '',
 									'outlineStyle' : this.props.isSelected ? 'dotted' : ''
 								}
 							}, 
@@ -34,7 +35,7 @@ class IndividualVerse extends React.Component {
 						'onClick': this.onClick, 
 						'style': 
 							{
-								'color': this.props.isHighlighted ? this.props.color : 'black',
+								'backgroundColor': this.props.highlightColor !== '' ? this.props.highlightColor : '',
 								'outlineStyle' : this.props.isSelected ? 'dotted' : '',
 								'outlineColor' : this.props.isSelected ? '#C0C0C0' : '',
 							}
@@ -52,7 +53,7 @@ VerseSection.propTypes = {
 	verseNumber: PropTypes.number,
 	verseText: PropTypes.string,
 	bookmarkVerse: PropTypes.func,
-	isHighlighted: PropTypes.bool,
+	highlightColor: PropTypes.string,
 	showHideToolBar: PropTypes.func,
 	updateToolBar: PropTypes.func,
 	isSelected: PropTypes.bool,

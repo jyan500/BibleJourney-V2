@@ -114,16 +114,24 @@ def verses():
 		note_content = ''
 		react_state_object = {'search_query': search_param, 'verses': verses, 'book': book, 'chapter': chapter, 'num_chapters': num_chapters} 
 		if (current_user.is_authenticated):
-			existing_bookmark = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).first()
+
+			## get only the bookmarks where verses are null, since this is referring to bookmarked chapters
+			existing_bookmark = Bookmark.query.filter_by(book=request.args.get('book'), chapter = request.args.get('chapter'), author = current_user).filter((Bookmark.verse == 0) | (Bookmark.verse == None)).first()
+
 			if (existing_bookmark):
 				is_bookmark = True
 			existing_note = Note.query.filter_by(book=book, chapter=chapter, author= current_user).first()
 			if (existing_note):
 				note_content =existing_note.content
 
+			## get the highlighted verses, bookmarks where verse is not null
+			highlighted_verses = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).filter((Bookmark.verse != 0) | (Bookmark.verse != None)).all()
+			if (len(highlighted_verses) > 0):
+				highlighted_verses_list = convert_obj(highlighted_verses)	
 			## add the remaining two attributes if the user is logged in 
 			react_state_object['is_bookmark'] = is_bookmark 
 			react_state_object['note'] = note_content
+			react_state_object['highlighted_verses'] = highlighted_verses_list
 
 		return render_template("main/verses.html", form=form, react_state_object = react_state_object)
 	## version is world english bible by default until different versions are supported
@@ -205,8 +213,8 @@ def get_bookmark():
 	existing_bookmark = None
 	if (current_user.is_authenticated):
 		if (request.args.get('book') and request.args.get('chapter')):
-			existing_bookmark = Bookmark.query.filter_by(book=request.args.get('book'), chapter = request.args.get('chapter'), author = current_user).first()
-
+			## get only the bookmarks where verses are null, since this is referring to bookmarked chapters
+			existing_bookmark = Bookmark.query.filter_by(book=request.args.get('book'), chapter = request.args.get('chapter'), author = current_user).filter((Bookmark.verse == 0) | (Bookmark.verse == None)).first()
 		if (existing_bookmark):
 			return jsonify({'status' : 'Bookmark received', 'is_bookmark' : True})
 		else:
@@ -229,6 +237,44 @@ def save_bookmark():
 			return jsonify({'status' : 'Error: Bookmark for this chapter already exists!'})
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
+
+## get individual verses (bookmarks that are highlighted)
+@main.route("/bookmark/verses/retrieve", methods = ["GET"])
+def get_verses_bookmark():
+	if (current_user.is_authenticated):
+		book = request.args.get('book')	
+		chapter = request.args.get('chapter')
+		existing_bookmarks = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).filter((Bookmark.verse != 0) | (Bookmark.verse != None)).all()
+		print(existing_bookmarks, file = sys.stderr)
+		if (len(existing_bookmarks) > 0):
+			return jsonify({'status' : 'Highlighted Verses received', 'highlighted_verses': convert_obj(existing_bookmarks)})
+		else:
+			return jsonify({'status' : 'Bookmark not found'})
+
+	return jsonify({'status', 'Error: User must be logged in'})
+
+@main.route("/bookmark/verses/save", methods = ["POST"])
+def save_verses_bookmark():
+	if (current_user.is_authenticated):
+		book = request.json.get('book')
+		chapter = request.json.get('chapter')
+		verses = request.json.get('verses')
+		color = request.json.get('color')
+		print(verses, file = sys.stderr)
+		## find all bookmarks with the book and chapter, then the selected verses
+		existing_bookmarks = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).filter(Bookmark.verse.in_(verses)).all()
+		print(existing_bookmarks, file = sys.stderr)
+		if (len(existing_bookmarks) == 0):
+			for verse in verses:
+				bookmark = Bookmark(book = book, chapter = chapter, author = current_user, verse=verse, highlight_color=color)
+				db.session.add(bookmark)
+				db.session.commit()
+			return jsonify({'status' : 'Bookmarks saved'})
+		else:
+			return jsonify({'status' : 'Error: Bookmarks for the verses already exist!'})
+	else:
+		return jsonify({'status': 'Error: User must be logged in'})
+
 
 @main.route("/bookmark/delete", methods = ["POST"])
 def delete_bookmark():
