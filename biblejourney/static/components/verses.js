@@ -207,7 +207,13 @@ class Verses extends React.Component {
 			})
 			.then(json => {
 				console.log(json);
+				// get the updated list of highlighted verses after saving
+				return this.handleGetHighlightedVerses(this.state.toolBarVerses.chapter, this.state.toolBarVerses.book);
 				// this.setState({isBookmark: this.state.isBookmark ? false : true});					
+			}).then(json => {
+				console.log('reload the highlighted verses')
+				console.log('reloaded: ', json.highlighted_verses);
+				this.setState({highlightedVerses: json.highlighted_verses ? json.highlighted_verses : []})
 			}).catch(e => {
 
 			})

@@ -14,7 +14,6 @@ class IndividualVerse extends React.Component {
 		this.props.updateToolBar(this.props.book, this.props.chapter, this.props.verseNumber);
 	}
 	render(){
-		console.log('highlight color for ' + this.props.book + ' ' + this.props.chapter + ' ' + this.props.verseNumber + ' ' + this.props.highlightColor);
 		if (this.props.isParagraphMode){
 			return e('span', {	
 							key: this.props.verseNumber, 
