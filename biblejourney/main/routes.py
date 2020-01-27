@@ -112,6 +112,7 @@ def verses():
 		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
 		is_bookmark = False
 		note_content = ''
+		highlighted_verses_list = []
 		react_state_object = {'search_query': search_param, 'verses': verses, 'book': book, 'chapter': chapter, 'num_chapters': num_chapters} 
 		if (current_user.is_authenticated):
 
@@ -129,9 +130,9 @@ def verses():
 			if (len(highlighted_verses) > 0):
 				highlighted_verses_list = convert_obj(highlighted_verses)	
 			## add the remaining two attributes if the user is logged in 
+			react_state_object['highlighted_verses'] = highlighted_verses_list
 			react_state_object['is_bookmark'] = is_bookmark 
 			react_state_object['note'] = note_content
-			react_state_object['highlighted_verses'] = highlighted_verses_list
 
 		return render_template("main/verses.html", form=form, react_state_object = react_state_object)
 	## version is world english bible by default until different versions are supported
@@ -262,16 +263,25 @@ def save_verses_bookmark():
 		color = request.json.get('color')
 		print(verses, file = sys.stderr)
 		## find all bookmarks with the book and chapter, then the selected verses
+		## with the existing bookmarks, pluck only the verse numberse
 		existing_bookmarks = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).filter(Bookmark.verse.in_(verses)).all()
-		print(existing_bookmarks, file = sys.stderr)
-		if (len(existing_bookmarks) == 0):
-			for verse in verses:
+		bookmark_map = dict()
+		for bookmark in existing_bookmarks:
+			bookmark_map[int(bookmark.verse)] = bookmark
+		print(bookmark_map, file = sys.stderr)
+		## if the verse is existing, but highlighted a different color, update the color
+		## else make a new bookmark
+		for verse in verses:
+			if (bookmark_map.get(verse) == None):
 				bookmark = Bookmark(book = book, chapter = chapter, author = current_user, verse=verse, highlight_color=color)
 				db.session.add(bookmark)
 				db.session.commit()
-			return jsonify({'status' : 'Bookmarks saved'})
-		else:
-			return jsonify({'status' : 'Error: Bookmarks for the verses already exist!'})
+			else:
+				existing_bookmark = bookmark_map.get(verse)
+				existing_bookmark.highlight_color = color
+				db.session.commit()
+
+		return jsonify({'status' : 'Bookmarks saved'})
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
 
