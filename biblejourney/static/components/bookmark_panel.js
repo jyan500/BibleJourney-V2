@@ -13,12 +13,13 @@ class BookmarkPanel extends React.Component {
 			let date = this.props.convertDate(obj.date_posted);
 			console.log('date in render notes: ', date.getMonth()+1);
 			let formatted_date = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+			let link_text = obj.verse ? obj.book + ' ' + obj.chapter + ':' + obj.verse : obj.book + ' ' + obj.chapter
 			elements.push(
 				e('div', {key: obj.id, className: 'mb-2 mt-2 col-sm-4'}, 
 					e('div', {className: 'card hover-dark'}, 
 						e('img', {className: 'card-img-top', src: this.props.bible_bookmark_url, alt : 'Card image cap'}),
 						e('div', {className: 'card-body'}, 
-							e('a', {id: obj.book + ' ' + obj.chapter, href: '/verses?verse=' + obj.book + ' ' + obj.chapter, onClick: this.onClick, className: 'card-title stretched-link'}, obj.book + ' ' + obj.chapter),
+							e('a', {id: obj.book + ' ' + obj.chapter, href: '/verses?verse=' + link_text, onClick: this.onClick, className: 'card-title stretched-link'}, link_text),
 							e('p', {}, e('small', {}, formatted_date))
 						)
 					)

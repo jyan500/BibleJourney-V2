@@ -95,9 +95,13 @@ class VerseSection extends React.Component {
 		}	
 		else {
 			this.props.verses.forEach((verse, i) => {
-				console.log(verse);
 				let selected = this.props.toolBarVerses.verses.has(verse.verse);
-				let bookmarked_verse = this.props.highlightedVerses.findIndex(x => x.verse === verse.verse);
+				let highlight_color = '';
+				for (let bookmark of this.props.highlightedVerses){
+					if (bookmark.verse == verse.verse){
+						highlight_color = bookmark.highlight_color;
+					}	
+				}
 				if (i != 0 && i % 5 == 0){
 					verse_elements.push(e('br', null, null))
 					verse_elements.push(e('br', null, null))
@@ -114,7 +118,7 @@ class VerseSection extends React.Component {
 							'isShowToolBar': this.props.isShowToolBar,
 							'showHideToolBar' : this.props.showHideToolBar,
 							'updateToolBar' : this.props.updateToolBar,
-							'highlightColor' : bookmarked_verse.highlight_color,
+							'highlightColor' : highlight_color,
 							'isSelected' : selected
 						}
 					)

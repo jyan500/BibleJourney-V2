@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, flash, session, jsonify, url_for
+from flask import render_template, request, Blueprint, flash, session, jsonify, url_for, redirect
 from biblejourney.main.forms import VersesForm 
 from biblejourney.main.utils import *
 from biblejourney.models import BookRef, Note, Bookmark 
@@ -161,6 +161,7 @@ def bookmarks():
 		pagination_obj = Bookmark.query.filter_by(author = current_user).order_by(Bookmark.date_posted.desc()).paginate(page, bookmarks_per_page, False);
 		bookmark_content_map = dict() 
 		for bookmark in pagination_obj.items:
+			print(bookmark.id, file = sys.stderr)
 			search_param = bookmark.book + ' ' + bookmark.chapter
 			if (bookmark.verse != None):
 				search_param += ':' + bookmark.verse
@@ -170,7 +171,7 @@ def bookmarks():
 				return render_template("main/bookmarks.html", form=form)
 			else:
 				## only show the first 5 verses of each chapter
-				bookmark_content_map[search_param] = {'verses': json['verses'][0:5], 'bookmark' : search_param, 'date': bookmark.date_posted}
+				bookmark_content_map[search_param] = {'id' : bookmark.id, 'verses': json['verses'][0:5], 'bookmark' : search_param, 'date': bookmark.date_posted}
 		next_url = None
 		prev_url = None
 		if pagination_obj.has_next:
@@ -300,6 +301,14 @@ def delete_bookmark():
 			return jsonify({'status' : "Error: Bookmark for this chapter doesn't exist!"})
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
+
+@main.route("/bookmark/delete/<id>", methods = ["POST"])
+def delete_bookmark_by_id(id):
+	existing_bookmark = Bookmark.query.get(id)
+	db.session.delete(existing_bookmark)
+	db.session.commit()
+	flash('Bookmark deleted!', 'success')
+	return redirect(url_for('main.bookmarks'))
 
 def getVerseBodyRequest(param: str):
 	## if start verse and end verse are provided

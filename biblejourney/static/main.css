@@ -175,7 +175,7 @@ a.article-title:hover {
 .bottom-fade {
 	position: absolute;
 	width: 100%;
-	height: 180px;
+	height: 180px; /* changed to 150px to prevent the overlay from blocking the card's header link and modal button */
 	z-index: 99;
 	bottom: 0;
 	left: 0;
@@ -201,6 +201,11 @@ a.article-title:hover {
 /* remove mce unregistered message */
 .mce-notification-inner {
 	display:none!important;
+}
+
+/* Add z index over all other elements */
+.__z-over{
+	z-index: 10000;
 }
 
 
