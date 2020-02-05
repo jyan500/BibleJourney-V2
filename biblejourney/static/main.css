@@ -138,34 +138,41 @@ a.article-title:hover {
 }
 
 /* verse_toolbar.js */
-.toolbar {
+/*.toolbar {
 	z-index : 99;
-	bottom : 0;
-	left: 0;
-	width: 100%;
-	height: 150px;
+	top: 80px;
+	left: 40px;
 	padding-left: 5px;
 	padding-right: 5px;
-	position: absolute;
+	position: fixed;
 }
 
 .color-row {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 }
 
 .color-col {
-	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}*/
+.close-button {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	border: none;
+	background: transparent;
+	font-size: 1.5em;
 }
-
 .color-button {
 	border: transparent;
 	padding: 30px;
 	margin: 0 10px 0 10px;
 	border-radius: 5px;
-
-
 }
 
 /* bookmarks.html */
@@ -208,4 +215,97 @@ a.article-title:hover {
 	z-index: 10000;
 }
 
+@media only screen and (min-width: 1480px){
+	.toolbar {
+		z-index : 99;
+		top: 80px;
+		left: 40px;
+		width: 150px;
+		padding-left: 5px;
+		padding-right: 5px;
+		position: fixed;
+	}
+	.card-title {
+		text-align: center;
+		margin-top: 15px;
+		word-wrap: break-word;
+	}
 
+	.color-row {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	.color-col {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+
+}
+
+@media only screen and (min-width: 400px) and (max-width: 1479px){
+	/* verse_toolbar.js */
+	/* fixed at the bottom for mobile */
+	.toolbar {
+		z-index: 99;
+		bottom: 0;
+		left:0;
+		width: 100%;
+		position: fixed;
+	}
+	.color-row {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.card-title {
+		margin-top: 15px;
+	}
+	.color-col {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+	.color-button {
+		border: transparent;
+		padding: 30px;
+		margin: 0 10px 0 10px;
+		border-radius: 5px;
+	}
+}
+
+@media only screen and (max-width: 399px){
+	/* fixed at the bottom for mobile */
+	.toolbar {
+		z-index: 99;
+		bottom: 0;
+		left:0;
+		width: 100%;
+		position: fixed;
+	}
+	.color-row {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.card-title {
+		margin-top: 15px;
+	}
+	.color-col {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+	.color-button {
+		border: transparent;
+		padding: 25px;
+		margin: 0 8px 0 8px;
+		border-radius: 5px;
+	}
+}

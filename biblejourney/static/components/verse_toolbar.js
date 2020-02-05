@@ -83,7 +83,7 @@ class VerseToolBar extends React.Component {
 				e('div', {'className' : 'card-body'}, 
 					e('div', {'className' : 'card-title'}, 
 						this.renderVerseListing(),
-						e('button', {'className' : 'close', 'onClick' : this.onClickClose}, '\u00D7')
+						e('button', {'className' : 'close-button', 'onClick' : this.onClickClose}, '\u00D7')
 					),
 					this.renderColorGroups()	
 				),
