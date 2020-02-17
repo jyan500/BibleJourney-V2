@@ -60,7 +60,7 @@ class Verses extends React.Component {
 	}
 	handleGetRequest(verse){
 		// reset the existing status messages 
-		this.setState({isSaveNoteSuccess: false, noteMessage: '', note: '', isBookmark: false, loading: true});
+	this.setState({isShowToolBar: false, toolBarVerses: {'book' : '', 'chapter' : 0, 'verses': new Set()}, isSaveNoteSuccess: false, noteMessage: '', note: '', isBookmark: false, loading: true});
 		const API_URL = 'https://bible-api.com/';
 		let url = API_URL + verse;
 		var r1, r2, r3, r4, r5;
