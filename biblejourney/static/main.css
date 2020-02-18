@@ -103,12 +103,12 @@ a.article-title:hover {
 	background-color: white;
 	position: relative;
 	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 #home-prev-link, #home-next-link {
-	position: fixed;
-	margin-top: 100px;
-	margin-left: 10px;
 	display: none;
 }
 
