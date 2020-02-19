@@ -67,7 +67,7 @@ def chapter():
 		flash("Verses could not be found!", "danger")
 		return render_template("main/home.html", form=form)
 	else:
-		book = json_result['reference'].split(' ')[0]
+		book = json_result['verses'][0]['book_name']
 		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
 		form.verse.data = json_result['reference'] 
 		return render_template("main/home.html", 
@@ -107,7 +107,7 @@ def verses():
 	else:
 		## the reason why the name of the book is retrieved from the API is because the API utilizes a fuzzy-search
 		## algorithm in case the user misspells the book slightly
-		book = json_result['reference'].split(' ')[0]
+		book = json_result['verses'][0]['book_name']
 		verses = json_result['verses']
 		num_chapters = int(BookRef.query.filter_by(book=book).first().num_chapters)
 		is_bookmark = False
