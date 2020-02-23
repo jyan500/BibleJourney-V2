@@ -210,6 +210,14 @@ def save_note():
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
 
+@main.route("/note/delete/<id>", methods = ["POST"])
+def delete_note_by_id(id):
+	existing_note = Note.query.get(id)
+	db.session.delete(existing_note)
+	db.session.commit()
+	flash('Note deleted!', 'success')
+	return redirect(url_for('main.notes'))
+
 @main.route("/bookmark/retrieve", methods = ["GET"])
 def get_bookmark():
 	existing_bookmark = None

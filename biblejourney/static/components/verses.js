@@ -130,7 +130,7 @@ class Verses extends React.Component {
 	handleSaveNote(note){
 		// console.log('in handle Save Note: ', note);	
 		let url = '/note/save';
-		this.setState({isSaveNoteSuccess: false})
+		this.setState({isSaveNoteSuccess: false, noteMessage: ''})
 		return fetch(url, {
 			method: 'POST', 
 			body: JSON.stringify({'note': note, 'book' : this.state.book_name, 'chapter' : this.state.chapter}), 
