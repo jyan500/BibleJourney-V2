@@ -43,6 +43,7 @@ class Verses extends React.Component {
 		this.showHideToolBar = this.showHideToolBar.bind(this);
 		this.updateToolBar = this.updateToolBar.bind(this);
 		this.highlightVerses = this.highlightVerses.bind(this);
+		this.deleteSelectedVerses = this.deleteSelectedVerses.bind(this);
 	}	
 	componentDidMount(){
 		// this.handleGetAllBookmarks().then(
@@ -220,6 +221,38 @@ class Verses extends React.Component {
 		}	
 	}
 
+	deleteSelectedVerses(){
+		let url = '/bookmark/verses/delete';
+		if (url != ''){
+			return fetch(url, {
+				method : 'POST',
+				body: JSON.stringify(
+					{
+						'book' : this.state.toolBarVerses.book, 
+						'chapter' : this.state.toolBarVerses.chapter, 
+						'verses' : Array.from(this.state.toolBarVerses.verses),
+					}
+					),
+				headers: {'Content-Type': 'application/json'}
+			})
+			.then(response => {
+				return response.json();	
+			})
+			.then(json => {
+				console.log(json);
+				// get the updated list of highlighted verses after saving
+				return this.handleGetHighlightedVerses(this.state.toolBarVerses.chapter, this.state.toolBarVerses.book);
+				// this.setState({isBookmark: this.state.isBookmark ? false : true});					
+			}).then(json => {
+				console.log('reload the highlighted verses')
+				console.log('reloaded: ', json.highlighted_verses);
+				this.setState({highlightedVerses: json.highlighted_verses ? json.highlighted_verses : []})
+			}).catch(e => {
+
+			})
+		}	
+	}
+
 	// addOrDeleteBookmarkVerse(book, chapter, verse){
 	// 	let url = this.state.isBookmark ? '/bookmark/delete' : '/bookmark/save';
 	// 	if (url != ''){
@@ -255,7 +288,8 @@ class Verses extends React.Component {
 				'toolBarVerses': this.state.toolBarVerses,
 				'updateToolBar': this.updateToolBar,
 				'highlightVerses': this.highlightVerses,
-				'highlightedVerses': this.state.highlightedVerses
+				'highlightedVerses': this.state.highlightedVerses,
+				'deleteSelectedVerses': this.deleteSelectedVerses
 			})
 		}
 	}

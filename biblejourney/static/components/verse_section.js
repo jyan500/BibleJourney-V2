@@ -133,7 +133,7 @@ class VerseSection extends React.Component {
 	}
 	renderVerseToolBar(){
 		if (this.props.isShowToolBar){
-			return e(VerseToolBar, {'highlightVerses': this.props.highlightVerses, 'toolBarVerses': this.props.toolBarVerses, 'isShowToolBar': this.props.isShowToolBar, 'showHideToolBar': this.props.showHideToolBar});	
+			return e(VerseToolBar, {'deleteSelectedVerses': this.props.deleteSelectedVerses, 'highlightVerses': this.props.highlightVerses, 'toolBarVerses': this.props.toolBarVerses, 'isShowToolBar': this.props.isShowToolBar, 'showHideToolBar': this.props.showHideToolBar});	
 		}
 	}
 	render(){
@@ -178,5 +178,6 @@ VerseSection.propTypes = {
 	isShowToolBar: PropTypes.bool,
 	updateToolBar: PropTypes.func,
 	toolBarVerses: PropTypes.object,
-	highlightVerses: PropTypes.func
+	highlightVerses: PropTypes.func,
+	deleteSelectedVerses: PropTypes.func
 }

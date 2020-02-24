@@ -294,6 +294,32 @@ def save_verses_bookmark():
 	else:
 		return jsonify({'status': 'Error: User must be logged in'})
 
+@main.route("/bookmark/verses/delete", methods = ["POST"])
+def delete_verses_bookmark():
+	if (current_user.is_authenticated):
+		book = request.json.get('book')
+		chapter = request.json.get('chapter')
+		verses = request.json.get('verses')
+		color = request.json.get('color')
+		print(verses, file = sys.stderr)
+		## find all bookmarks with the book and chapter, then the selected verses
+		## with the existing bookmarks, pluck only the verse numberse
+		existing_bookmarks = Bookmark.query.filter_by(book=book, chapter = chapter, author = current_user).filter(Bookmark.verse.in_(verses)).all()
+		bookmark_map = dict()
+		for bookmark in existing_bookmarks:
+			bookmark_map[int(bookmark.verse)] = bookmark
+		print(bookmark_map, file = sys.stderr)
+		## out of the verses that were chosen, delete the ones that currently exist in the db
+		for verse in verses:
+			if (bookmark_map.get(verse) != None):
+				existing_bookmark = bookmark_map.get(verse)
+				db.session.delete(existing_bookmark)
+				db.session.commit()
+
+		return jsonify({'status' : 'Bookmarks deleted'})
+	else:
+		return jsonify({'status': 'Error: User must be logged in'})
+
 
 @main.route("/bookmark/delete", methods = ["POST"])
 def delete_bookmark():

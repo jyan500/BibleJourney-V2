@@ -215,6 +215,7 @@ a.article-title:hover {
 	z-index: 10000;
 }
 
+
 @media only screen and (min-width: 1480px){
 	.toolbar {
 		z-index : 99;
@@ -243,6 +244,18 @@ a.article-title:hover {
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
+	}
+
+	.color-button {
+		border: transparent;
+		padding: 25px;
+		margin: 0 10px 0 10px;
+		border-radius: 5px;
+	}
+	.__verse-listing {
+		overflow: auto;
+		max-height: 10vh;
+		font-size: .95em;
 	}
 
 }

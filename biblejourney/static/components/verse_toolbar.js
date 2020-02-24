@@ -4,6 +4,7 @@ class VerseToolBar extends React.Component {
 		super();
 		this.onClickClose = this.onClickClose.bind(this);
 		this.onClickColor = this.onClickColor.bind(this);
+		this.onClickDelete = this.onClickDelete.bind(this);
 	}
 	onClickClose(event){
 		console.log('here');
@@ -13,6 +14,9 @@ class VerseToolBar extends React.Component {
 	onClickColor(event){
 		// highlight verses	with the chosen color
 		this.props.highlightVerses(event.target.value);
+	}
+	onClickDelete(event){
+		this.props.deleteSelectedVerses()
 	}
 	renderColorGroups(){
 		let listElements = [];
@@ -25,6 +29,12 @@ class VerseToolBar extends React.Component {
 				)
 			);
 		}
+		listElements.push(
+			e('div', {key: 'delete', 'className': 'color-col'},
+				e('button', {onClick: this.onClickDelete, value: 'delete', key: 'delete', 'className' : 'color-button'}),
+				e('label', {'className' : 'text-muted'}, e('small', {}, 'un-highlight'))
+			)
+		)
 		return e('div', {'className' : 'color-row'}, listElements
 		)		
 	}
@@ -75,7 +85,9 @@ class VerseToolBar extends React.Component {
 		}
 		stringListing = verseListings.join(', ');
 		console.log(stringListing);
-		return e('small', {'className' : 'text-muted'}, stringListing);
+		return e('div', {'className':'__verse-listing'}, 
+					e('small', {'className' : 'text-muted'}, stringListing)
+			);
 	}
 	render(){
 		
@@ -94,5 +106,6 @@ class VerseToolBar extends React.Component {
 VerseToolBar.propTypes = {
 	toolBarVerses: PropTypes.object,
 	showHideToolBar: PropTypes.func,
-	isShowToolBar: PropTypes.bool
+	isShowToolBar: PropTypes.bool,
+	deleteSelectedVerses: PropTypes.func
 }
