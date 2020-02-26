@@ -1,39 +1,43 @@
 {% extends 'layouts/layout.html' %}
 {% block content %}
 	<div class = "content-section">
-		{% for note in notes %}
-			<div class = "card mt-3 mb-3">
-				<div class = "card-header">
-					<a href = "{{url_for('main.verses', verse=note.book + ' ' + note.chapter) }}">
-						{{ note.book }} {{ note.chapter }}	
-					</a>
-					<button type = "button" class = "close" data-target = "#modal_{{note.id}}" data-toggle = "modal">&times;</button>
-					<form method = "POST" action = "{{url_for('main.delete_note_by_id', id = note.id)}}">
-						<div id = "modal_{{note.id}}" class = "modal fade" tabindex = '-1' role = 'dialog'>
-							<div class = "modal-dialog">
-								<div class = "modal-content">
-									<div class = "modal-header">
-										<h5 class = "modal-title">Delete Note</h5>	
-										<button type = "button" class = "close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden = "true">&times;</span>	
-										</button>
+		{% if note | length > 0 %}
+			{% for note in notes %}
+				<div class = "card mt-3 mb-3">
+					<div class = "card-header">
+						<a href = "{{url_for('main.verses', verse=note.book + ' ' + note.chapter) }}">
+							{{ note.book }} {{ note.chapter }}	
+						</a>
+						<button type = "button" class = "close" data-target = "#modal_{{note.id}}" data-toggle = "modal">&times;</button>
+						<form method = "POST" action = "{{url_for('main.delete_note_by_id', id = note.id)}}">
+							<div id = "modal_{{note.id}}" class = "modal fade" tabindex = '-1' role = 'dialog'>
+								<div class = "modal-dialog">
+									<div class = "modal-content">
+										<div class = "modal-header">
+											<h5 class = "modal-title">Delete Note</h5>	
+											<button type = "button" class = "close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden = "true">&times;</span>	
+											</button>
+										</div>	
+										<div class = "modal-body"><p>Are you sure you want to delete this note?</p></div>
+										<div class = "modal-footer">
+											<button type = "button" class = "btn btn-secondary" data-dismiss="modal">Close</button>
+											<input type = "submit" class = "btn btn-primary">
+										</div>
 									</div>	
-									<div class = "modal-body"><p>Are you sure you want to delete this note?</p></div>
-									<div class = "modal-footer">
-										<button type = "button" class = "btn btn-secondary" data-dismiss="modal">Close</button>
-										<input type = "submit" class = "btn btn-primary">
-									</div>
 								</div>	
-							</div>	
-						</div>
-					</form>
-				</div>	
-				<div class = "card-body">
-					<div class = "card-title">{{ note.date_posted.strftime('%m/%d/%Y') }}</div>	
-					<div class = "card-text">{{ note.content | safe }}</div>
+							</div>
+						</form>
+					</div>	
+					<div class = "card-body">
+						<div class = "card-title">{{ note.date_posted.strftime('%m/%d/%Y') }}</div>	
+						<div class = "card-text">{{ note.content | safe }}</div>
+					</div>
 				</div>
-			</div>
-		{% endfor %}
+			{% endfor %}
+		{% else %}
+			<h3>No Notes Found!</h3>
+		{% endif %}
 		{% if prev_url %}
 			<a href = "{{ prev_url }}"> Previous </a>
 		{% endif %}

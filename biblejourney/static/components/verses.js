@@ -31,7 +31,7 @@ class Verses extends React.Component {
 			this.state['chapter'] = window.objects.react_state_obj.chapter 
 			this.state['isBookmark'] = window.objects.react_state_obj.is_bookmark
 			this.state['note'] = window.objects.react_state_obj.note
-			this.state['highlightedVerses'] = window.objects.react_state_obj.highlighted_verses
+			this.state['highlightedVerses'] = window.objects.react_state_obj.highlighted_verses ? window.objects.react_state_obj.highlighted_verses : []
 		}
 		this.handleGetRequest = this.handleGetRequest.bind(this);
 		this.saveParagraphMode = this.saveParagraphMode.bind(this);

@@ -10,8 +10,11 @@ class IndividualVerse extends React.Component {
 		// when the user clicks the highlight button, construct the final verse from the verse numbers from the array
 		// if the toolbar is already shown when the user clicks on a verse, do not show the toolbar already
 		// alert('Book: ', this.props.book, 'Chapter: ', this.props.chapter, 'Verse Number: ', this.props.verseNumber, 'Verse Text: ', this.props.verseText);
-		 this.props.showHideToolBar(true);
-		this.props.updateToolBar(this.props.book, this.props.chapter, this.props.verseNumber);
+
+		if (window.appConfig.is_authenticated){
+			this.props.showHideToolBar(true);
+			this.props.updateToolBar(this.props.book, this.props.chapter, this.props.verseNumber);
+		}
 	}
 	render(){
 		if (this.props.isParagraphMode){
