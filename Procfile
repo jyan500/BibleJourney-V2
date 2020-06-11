@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath biblejourney config:app
+web: gunicorn run:app
