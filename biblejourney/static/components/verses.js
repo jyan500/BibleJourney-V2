@@ -72,7 +72,7 @@ class Verses extends React.Component {
 			.then(json => {
 				console.log(json);
 				r1 = json;
-				return fetch('http://localhost:5000/book?book_name=' + json.verses[0].book_name);
+				return fetch('/book?book_name=' + json.verses[0].book_name);
 			})
 			.then(response => {
 				return response.json();
