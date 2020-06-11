@@ -23,7 +23,7 @@ class Verses extends React.Component {
 			toolBarVerses: {'book' : '', 'chapter' : 0, 'verses': new Set()}
 		}
 		if (window.objects.react_state_obj){
-			console.log(this.state.searchQuery)
+			//console.log(this.state.searchQuery)
 			this.state['searchQuery'] = window.objects.react_state_obj.search_query
 			this.state['verses_list'] = window.objects.react_state_obj.verses 
 			this.state['book_name'] = window.objects.react_state_obj.book 
@@ -88,8 +88,8 @@ class Verses extends React.Component {
 				return this.handleGetHighlightedVerses(r1.verses[0].chapter, r1.verses[0].book_name);
 			}).then(json=>{
 				r5 = json;
-				console.log(r5.highlighted_verses);
-				console.log('Setting bookmark: ' , json.is_bookmark);
+				// console.log(r5.highlighted_verses);
+				// console.log('Setting bookmark: ' , json.is_bookmark);
 				this.setState({
 						searchQuery: verse, 
 						error: '', 
@@ -180,7 +180,7 @@ class Verses extends React.Component {
 				return response.json();	
 			})
 			.then(json => {
-				console.log(json);
+				//console.log(json);
 				this.setState({isBookmark: this.state.isBookmark ? false : true});					
 			}).catch(e => {
 
@@ -207,13 +207,13 @@ class Verses extends React.Component {
 				return response.json();	
 			})
 			.then(json => {
-				console.log(json);
+				//console.log(json);
 				// get the updated list of highlighted verses after saving
 				return this.handleGetHighlightedVerses(this.state.toolBarVerses.chapter, this.state.toolBarVerses.book);
 				// this.setState({isBookmark: this.state.isBookmark ? false : true});					
 			}).then(json => {
-				console.log('reload the highlighted verses')
-				console.log('reloaded: ', json.highlighted_verses);
+				//console.log('reload the highlighted verses')
+				//console.log('reloaded: ', json.highlighted_verses);
 				this.setState({highlightedVerses: json.highlighted_verses ? json.highlighted_verses : []})
 			}).catch(e => {
 
@@ -239,13 +239,13 @@ class Verses extends React.Component {
 				return response.json();	
 			})
 			.then(json => {
-				console.log(json);
+				//console.log(json);
 				// get the updated list of highlighted verses after saving
 				return this.handleGetHighlightedVerses(this.state.toolBarVerses.chapter, this.state.toolBarVerses.book);
 				// this.setState({isBookmark: this.state.isBookmark ? false : true});					
 			}).then(json => {
-				console.log('reload the highlighted verses')
-				console.log('reloaded: ', json.highlighted_verses);
+				//console.log('reload the highlighted verses')
+				//console.log('reloaded: ', json.highlighted_verses);
 				this.setState({highlightedVerses: json.highlighted_verses ? json.highlighted_verses : []})
 			}).catch(e => {
 
@@ -311,7 +311,7 @@ class Verses extends React.Component {
 
 	renderNoteSection(){
 		if (this.state.book_name != "" && this.state.chapter != ""){
-			console.log('Note right now: ', this.state.note);
+			//console.log('Note right now: ', this.state.note);
 			return e(NoteSection, {
 				'chapter' : this.state.chapter, 
 				'book' : this.state.book_name,
@@ -337,9 +337,9 @@ class Verses extends React.Component {
 	}
 
 	convertDateFromMySQL(dateString){
-		console.log(dateString);
+		//console.log(dateString);
 		let parts = dateString.replace('T', ' ').split(/[- :]/);
-		console.log('parts: ', parts);
+		//console.log('parts: ', parts);
 		// javascript months are indexed 0 to 11
 		let date = new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
 		return date

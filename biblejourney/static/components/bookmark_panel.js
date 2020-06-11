@@ -4,14 +4,14 @@ class BookmarkPanel extends React.Component {
 		this.onClick = this.onClick.bind(this);
 	}
 	onClick(event){
-		console.log(event.target.id);
+		//console.log(event.target.id);
 		return this.props.handleGetRequest(event.target.id);
 	}
 	renderBookmarks(){
 		let elements = [];
 		this.props.bookmarks.map((obj) => {
 			let date = this.props.convertDate(obj.date_posted);
-			console.log('date in render notes: ', date.getMonth()+1);
+			//console.log('date in render notes: ', date.getMonth()+1);
 			let formatted_date = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
 			let link_text = obj.verse ? obj.book + ' ' + obj.chapter + ':' + obj.verse : obj.book + ' ' + obj.chapter
 			elements.push(

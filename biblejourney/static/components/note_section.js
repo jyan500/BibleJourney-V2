@@ -13,8 +13,8 @@ class NoteSection extends React.Component {
 	}
 	componentDidUpdate(prevProps){
 		if (prevProps.chapter != this.props.chapter || prevProps.book != this.props.book || prevProps.note != this.props.note){
-			console.log('component did update note section');
-			console.log('value of props: ', this.props)
+			//console.log('component did update note section');
+			//console.log('value of props: ', this.props)
 			this.setState({value: this.props.note})
 		}
 	}
@@ -31,7 +31,7 @@ class NoteSection extends React.Component {
 		this.props.handleSaveNote(this.state.value);
 	}	
 	onChangeEditor(val){
-		console.log(val);
+		//console.log(val);
 		this.setState({value: val});
 	}
 	renderSubmit(){

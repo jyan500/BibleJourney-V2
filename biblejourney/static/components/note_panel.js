@@ -4,14 +4,14 @@ class NotePanel extends React.Component {
 		this.onClick = this.onClick.bind(this);
 	}	
 	onClick(event){
-		console.log(event.target.id);
+		//console.log(event.target.id);
 		return this.props.handleGetRequest(event.target.id);
 	}
 	renderNotes(){
 		let elements = [];
 		this.props.notes.map((obj) => {
 			let date = this.props.convertDate(obj.date_posted);
-			console.log('date in render notes: ', date.getMonth()+1);
+			//console.log('date in render notes: ', date.getMonth()+1);
 			let formatted_date = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
 			elements.push(
 				e('div', {key: obj.id, className: 'mb-2 mt-2 col-sm-4'}, 

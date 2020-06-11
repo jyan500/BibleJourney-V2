@@ -7,7 +7,7 @@ class VerseToolBar extends React.Component {
 		this.onClickDelete = this.onClickDelete.bind(this);
 	}
 	onClickClose(event){
-		console.log('here');
+		//console.log('here');
 		this.props.showHideToolBar(false);
 		//this.props.showHideToolBar(false);
 	}
@@ -56,19 +56,19 @@ class VerseToolBar extends React.Component {
 			return a-b;
 		});
 		let first = verseArray[0];
-		console.log(typeof first);
-		console.log(verseArray);
+		//console.log(typeof first);
+		//console.log(verseArray);
 
 		// algorithm to check if the verse are in sequence
 		// if the verses are no longer in sequence, push the verse listing with the first and last verse (i.e `${Book} ${Chapter}:${first_verse}-${last_verse}')
 		// if picking individual verses that are not in sequence, just push each verse to the verse listing
 		for (let i = 0; i < verseArray.length; i++){
-			console.log(`value of first: ${first}`);
+			//console.log(`value of first: ${first}`);
 			// if we aren't in the last verse in the array, and the current verses plus one is not equal to the next verse
 			// the verses are no longer highlighted in sequence
 			if (i < verseArray.length && verseArray[i+1] != verseArray[i] + 1){
 				let last = verseArray[i];
-				console.log(`value of last: ${last}`);
+				// console.log(`value of last: ${last}`);
 				// if none of the verses are in sequence, the first would have been equal to last,
 				// so only push the first 
 				if (last != first){
@@ -84,7 +84,7 @@ class VerseToolBar extends React.Component {
 			// verseListings.push(`${this.props.toolBarVerses.book} ${this.props.toolBarVerses.chapter}:${verseArray[i]}`);
 		}
 		stringListing = verseListings.join(', ');
-		console.log(stringListing);
+		//console.log(stringListing);
 		return e('div', {'className':'__verse-listing'}, 
 					e('small', {'className' : 'text-muted'}, stringListing)
 			);

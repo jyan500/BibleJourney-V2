@@ -4,7 +4,7 @@ class IndividualVerse extends React.Component {
 		this.onClick = this.onClick.bind(this);
 	}
 	onClick(event){
-		console.log('book: ', this.props.book, 'chapter: ', this.props.chapter, 'Verse Number: ', this.props.verseNumber);
+		//console.log('book: ', this.props.book, 'chapter: ', this.props.chapter, 'Verse Number: ', this.props.verseNumber);
 		// show the toolbar
 		// add the verse numbers to an array
 		// when the user clicks the highlight button, construct the final verse from the verse numbers from the array

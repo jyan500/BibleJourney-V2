@@ -17,7 +17,7 @@ class DailyVerse extends React.Component {
 				return response.json()
 			})
 			.then((json) => {
-				console.log(json);
+				//console.log(json);
 				let disclaimer = json.verse.notice;
 				let details = json.verse.details;
 				this.setState({loading: false,verse: details.text, reference: details.reference, version: details.version, url: details.verseurl, notice: json.verse.notice})
