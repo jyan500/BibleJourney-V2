@@ -1,7 +1,7 @@
 {% extends 'layouts/layout.html' %}
 {% block content %}
 	<div class = "content-section">
-		{% if note | length > 0 %}
+		{% if notes | length > 0 %}
 			{% for note in notes %}
 				<div class = "card mt-3 mb-3">
 					<div class = "card-header">
